@@ -1,7 +1,7 @@
 # Kelvin's Better Player Animations Revived
-It seems that [the original mod](https://github.com/Kelvin285/KelvinsBetterPlayerAnimations) is now dead (but it really looks cool), so I decided to revive it by adding support for the latest version and bug fixes. 
+It seems that [the original mod](https://github.com/Kelvin285/KelvinsBetterPlayerAnimations) is now dead (but the mod is really cool), so I decided to revive it. 
 
-Don't have too high hopes for this project, as this repo could be as dead as the original one, but I will try my best to prevent that.
+Don't have too high hopes for this mod as I may not update it in a while.
 
 
 ## Mod showcase
