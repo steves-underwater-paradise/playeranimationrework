@@ -13,9 +13,6 @@
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "kelvin285.betteranimations.BetterAnimations"
-    ],
     "client": [
       "kelvin285.betteranimations.BetterAnimations"
     ]

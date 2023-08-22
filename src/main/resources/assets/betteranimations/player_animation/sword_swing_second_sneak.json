@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"sword_swing_sneak_second": {
+		"sword_swing_second_sneak": {
 			"animation_length": 0.32,
 			"bones": {
 				"body": {

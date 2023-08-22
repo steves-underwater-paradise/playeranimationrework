@@ -1,6 +1,5 @@
 package kelvin285.betteranimations.mixin;
 
-import kelvin285.betteranimations.IPlayerAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -15,12 +14,26 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
+
+    @Unique
+    private float leanAmount = 0;
+    @Unique
+    private float leanMultiplier = 1;
+    @Unique
+    private float realLeanMultiplier = 1;
+    @Unique
+    private float turnDelta = 0;
+    // TODO: Use better way to get tick delta
+    @Unique
+    private final float tickDelta = 0.05f;
+
 
     public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
         super(ctx, model, shadowRadius);
@@ -37,40 +50,51 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
         matrixStack.push();
 
-        float lean_x = (float)player.getVelocity().z;
-        float lean_z = -(float)player.getVelocity().x;
+        float leanX = (float)player.getVelocity().z;
+        float leanZ = -(float)player.getVelocity().x;
+        float bodyYawDelta = player.getYaw() - player.prevYaw;
 
-        float turnLeanAmount = ((IPlayerAccessor)player).getLeanAmount();
-        float leanMultiplier = ((IPlayerAccessor)player).getLeanMultiplier();
-        float player_squash = ((IPlayerAccessor)player).getSquash();
-        player_squash = MathHelper.clamp(player_squash, -1, 1) * 0.25f;
+        boolean isWalking = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 
-        float h_scale = 1;
-        float v_scale = 1;
 
-        h_scale = MathHelper.lerp(player_squash, 1, 0.5f);
-        v_scale = MathHelper.lerp(player_squash, 1, 1.5f);
+        if (turnDelta != 0) {
+            leanAmount = MathHelper.lerp(tickDelta * 4, leanAmount, bodyYawDelta);
+        } else {
+            leanAmount = MathHelper.lerp(tickDelta * 4, leanAmount, 0);
+        }
+        leanMultiplier = MathHelper.lerp(tickDelta * 8, leanMultiplier, realLeanMultiplier);
 
-        float yaw = (float)Math.toRadians(player.bodyYaw + 90);
-        lean_x += Math.cos(yaw) * turnLeanAmount;
-        lean_z += Math.sin(yaw) * turnLeanAmount;
-
-        lean_x *= leanMultiplier;
-        lean_z *= leanMultiplier;
-
-        if (player.isFallFlying()) {
-            lean_x = 0;
-            lean_z = 0;
-            h_scale = 1.0f;
-            v_scale = 1.0f;
+        if (realLeanMultiplier < 1) {
+            realLeanMultiplier += 0.1f;
+        } else {
+            realLeanMultiplier = 1;
         }
 
-        Quaternionf quat = new Quaternionf();
-        quat = new Matrix4f().rotate(lean_x, new Vector3f(1, 0, 0)).rotate(lean_z, new Vector3f(0, 0, 1)).getNormalizedRotation(quat);
+        if (Math.abs(bodyYawDelta) > 3 && !isWalking) {
+            turnDelta = Math.signum(bodyYawDelta);
+        } else {
+            turnDelta = MathHelper.lerp(tickDelta * 16, turnDelta, 0);
+            if (Math.abs(turnDelta) < 0.01f) {
+                turnDelta = 0;
+            }
+        }
 
-        matrixStack.multiply(quat);
-        matrixStack.scale(h_scale, v_scale, h_scale);
-        this.setModelPose(player);
+        float yaw = (float)Math.toRadians(player.bodyYaw + 90);
+        leanX += Math.cos(yaw) * leanAmount * 0.01f;
+        leanZ += Math.sin(yaw) * leanAmount * 0.01f;
+
+        leanX *= leanMultiplier;
+        leanZ *= leanMultiplier;
+
+        if (!player.isFallFlying()) {
+            Quaternionf quat = new Quaternionf();
+            quat = new Matrix4f().rotate(leanX, new Vector3f(1, 0, 0)).rotate(leanZ,
+                    new Vector3f(0, 0, 1)).getNormalizedRotation(quat);
+
+            matrixStack.multiply(quat);
+            this.setModelPose(player);
+        }
+
         super.render(player, f, g, matrixStack, vertexConsumerProvider, i);
         matrixStack.pop();
 
