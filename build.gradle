@@ -25,6 +25,11 @@ repositories {
     }
 
     maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+
+    maven {
         name = "KosmX's maven"
         url = "https://maven.kosmx.dev"
     }
@@ -39,8 +44,13 @@ dependencies {
     // Fabric API
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+    // Mod Menu
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
     // PlayerAnimator
-    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator}")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
 }
 
 processResources {

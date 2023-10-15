@@ -2,11 +2,11 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.util.Identifier;
+
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class CrawlAnimationCheck implements AnimationCheck {
 	private static final String ANIMATION_NAME = "crawling";
@@ -34,10 +34,7 @@ public class CrawlAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

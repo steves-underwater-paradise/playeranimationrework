@@ -8,6 +8,8 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+
 public class ClimbingAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "climbing_idle";
 	private static final String WALK_ANIMATION_NAME = "climbing";
@@ -32,10 +34,7 @@ public class ClimbingAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

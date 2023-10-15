@@ -15,6 +15,7 @@ public class EdgeStandingAnimationCheck implements AnimationCheck {
 	private boolean shouldPlay = false;
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public void tick(AbstractClientPlayerEntity player) {
 		boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 		BlockState standingBlockState = player.getWorld().getBlockState(player.getBlockPos().down());
@@ -29,8 +30,7 @@ public class EdgeStandingAnimationCheck implements AnimationCheck {
 	@Override
 	public AnimationData getAnimationData() {
 		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, BALANCE_LOSS_ANIMATION_NAME)
-		);
+				new Identifier(PlayerAnimationRework.MOD_ID, BALANCE_LOSS_ANIMATION_NAME));
 
 		return new AnimationData(animation, 1.0f, 5);
 	}

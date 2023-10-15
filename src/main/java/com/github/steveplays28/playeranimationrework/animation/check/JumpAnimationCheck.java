@@ -8,6 +8,8 @@ import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+
 public class JumpAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"jump_first", "jump_second"};
 
@@ -24,10 +26,7 @@ public class JumpAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, ANIMATION_NAMES[isJumpIndexOdd ? 1 : 0])
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(ANIMATION_NAMES[isJumpIndexOdd ? 1 : 0]));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

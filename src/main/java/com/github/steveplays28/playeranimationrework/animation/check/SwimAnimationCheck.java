@@ -8,6 +8,8 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+
 public class SwimAnimationCheck implements AnimationCheck {
 	private static final String SWIM_IDLE_ANIMATION_NAME = "swim_idle";
 
@@ -20,10 +22,7 @@ public class SwimAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, SWIM_IDLE_ANIMATION_NAME)
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(SWIM_IDLE_ANIMATION_NAME));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

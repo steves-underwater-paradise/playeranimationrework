@@ -4,14 +4,14 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 
 import java.util.Objects;
+
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class PunchAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};
@@ -22,8 +22,7 @@ public class PunchAnimationCheck implements AnimationCheck {
 
 	@Override
 	public void swingHand(AbstractClientPlayerEntity player, Hand hand) {
-		if (player.handSwinging && player.handSwingTicks < this.getHandSwingDuration(player) / 2
-				&& player.handSwingTicks > 0) {
+		if (player.handSwinging && player.handSwingTicks < this.getHandSwingDuration(player) / 2 && player.handSwingTicks > 0) {
 			return;
 		}
 
@@ -46,10 +45,7 @@ public class PunchAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

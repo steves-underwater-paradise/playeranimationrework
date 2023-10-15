@@ -10,6 +10,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+
 public class BoatAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "boat_idle";
 	private static final String FORWARD_ANIMATION_NAME = "boat_forward";
@@ -45,10 +47,7 @@ public class BoatAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
-		);
-
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

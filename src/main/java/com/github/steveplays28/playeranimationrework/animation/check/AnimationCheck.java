@@ -20,8 +20,7 @@ public interface AnimationCheck {
 
 	default void swingHand(AbstractClientPlayerEntity player, Hand hand) {}
 
-	default void fall(AbstractClientPlayerEntity player, double heightDifference, boolean onGround, BlockState state,
-	                  BlockPos landedPosition) {}
+	default void fall(AbstractClientPlayerEntity player, double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {}
 
 	default void cleanup() {}
 }
