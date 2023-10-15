@@ -6,6 +6,7 @@ import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class WalkAnimationCheck implements AnimationCheck {
@@ -35,7 +36,7 @@ public class WalkAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
+		KeyframeAnimation animation = getAnimation(selectedAnimationName);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

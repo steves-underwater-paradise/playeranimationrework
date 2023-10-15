@@ -25,6 +25,11 @@ repositories {
     }
 
     maven {
+        name = "Shedaniel Maven"
+        url = "https://maven.shedaniel.me/"
+    }
+
+    maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
@@ -51,6 +56,14 @@ dependencies {
 
     // PlayerAnimator
     modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
+
+    // Cloth Config (runtime)
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
+
+    // Real Camera (runtime)
+    modRuntimeOnly("maven.modrinth:real-camera:${project.real_camera_version}")
 }
 
 processResources {

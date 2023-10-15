@@ -16,7 +16,7 @@ public class AnimationUtil {
 		var keyframeAnimation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(animationName));
 
 		if (keyframeAnimation == null) {
-			throw new IllegalStateException("Animation is null.");
+			throw new IllegalStateException(String.format("Animation %s is null.", animationName));
 		}
 
 		return keyframeAnimation;

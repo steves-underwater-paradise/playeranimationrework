@@ -3,10 +3,9 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class ElytraAnimationCheck implements AnimationCheck {
 	private static final String ANIMATION_NAME = "elytra_fly";
@@ -15,12 +14,12 @@ public class ElytraAnimationCheck implements AnimationCheck {
 
 	@Override
 	public void tick(AbstractClientPlayerEntity player) {
-		this.shouldPlay = player.isFallFlying();
+//		this.shouldPlay = player.isFallFlying();
 	}
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(ANIMATION_NAME));
+		KeyframeAnimation animation = getAnimation(ANIMATION_NAME);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

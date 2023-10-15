@@ -1,16 +1,13 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.util.Identifier;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class BoatAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "boat_idle";
@@ -47,7 +44,7 @@ public class BoatAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
+		KeyframeAnimation animation = getAnimation(selectedAnimationName);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

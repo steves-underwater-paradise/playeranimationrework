@@ -6,6 +6,7 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class EatingAnimationCheck implements AnimationCheck {
@@ -20,7 +21,7 @@ public class EatingAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(ANIMATION_NAME));
+		KeyframeAnimation animation = getAnimation(ANIMATION_NAME);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

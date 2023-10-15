@@ -8,6 +8,7 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class ClimbingAnimationCheck implements AnimationCheck {
@@ -34,7 +35,7 @@ public class ClimbingAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
+		KeyframeAnimation animation = getAnimation(selectedAnimationName);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

@@ -1,14 +1,12 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
+import dev.kosmx.playerAnim.core.util.Ease;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.util.Identifier;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class JumpAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"jump_first", "jump_second"};
@@ -26,8 +24,8 @@ public class JumpAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(ANIMATION_NAMES[isJumpIndexOdd ? 1 : 0]));
-		return new AnimationData(animation, 1.0f, 5);
+		KeyframeAnimation animation = getAnimation(ANIMATION_NAMES[isJumpIndexOdd ? 1 : 0]);
+		return new AnimationData(animation, 1.0f, 150, Ease.INOUTCUBIC);
 	}
 
 	@Override

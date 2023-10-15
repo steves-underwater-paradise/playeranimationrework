@@ -9,6 +9,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+
 public class EdgeStandingAnimationCheck implements AnimationCheck {
 	private static final String BALANCE_LOSS_ANIMATION_NAME = "edge_idle";
 
@@ -29,9 +31,7 @@ public class EdgeStandingAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-				new Identifier(PlayerAnimationRework.MOD_ID, BALANCE_LOSS_ANIMATION_NAME));
-
+		KeyframeAnimation animation = getAnimation(BALANCE_LOSS_ANIMATION_NAME);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 

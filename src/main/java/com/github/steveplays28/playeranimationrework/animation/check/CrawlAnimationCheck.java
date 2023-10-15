@@ -6,6 +6,7 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
+import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class CrawlAnimationCheck implements AnimationCheck {
@@ -34,7 +35,7 @@ public class CrawlAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(selectedAnimationName));
+		KeyframeAnimation animation = getAnimation(selectedAnimationName);
 		return new AnimationData(animation, 1.0f, 5);
 	}
 
