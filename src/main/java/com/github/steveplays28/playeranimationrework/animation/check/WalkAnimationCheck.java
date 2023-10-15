@@ -1,29 +1,32 @@
-package kelvin285.betteranimations.check;
+package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
-import kelvin285.betteranimations.AnimationData;
-import kelvin285.betteranimations.AnimationPriority;
-import kelvin285.betteranimations.BetterAnimations;
+import com.github.steveplays28.playeranimationrework.animation.AnimationData;
+import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
+import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class ClimbingAnimationCheck implements AnimationCheck {
-    private static final String IDLE_ANIMATION_NAME = "climbing_idle";
-    private static final String WALK_ANIMATION_NAME = "climbing";
+public class WalkAnimationCheck implements AnimationCheck {
+    private static final String IDLE_ANIMATION_NAME = "idle";
+    private static final String WALK_ANIMATION_NAME = "walking";
 
     private boolean shouldPlay = false;
     private String selectedAnimationName;
 
     @Override
     public void tick(AbstractClientPlayerEntity player) {
-        if(!player.isClimbing()) {
+        if(!player.isOnGround()) {
             return;
         }
 
         this.shouldPlay = true;
 
-        if(Math.abs(player.getY() - player.prevY) > 0) {
+        // TODO: Sync feet movement to floor
+        boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
+
+        if(isMoving) {
             this.selectedAnimationName = WALK_ANIMATION_NAME;
         } else {
             this.selectedAnimationName = IDLE_ANIMATION_NAME;
@@ -33,7 +36,7 @@ public class ClimbingAnimationCheck implements AnimationCheck {
     @Override
     public AnimationData getAnimationData() {
         KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-                new Identifier(BetterAnimations.MOD_ID, this.selectedAnimationName)
+                new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
         );
 
         return new AnimationData(animation, 1.0f, 5);
@@ -41,7 +44,7 @@ public class ClimbingAnimationCheck implements AnimationCheck {
 
     @Override
     public AnimationPriority getPriority() {
-        return AnimationPriority.CLIMBING;
+        return AnimationPriority.WALK;
     }
 
     @Override

@@ -1,7 +1,7 @@
-package kelvin285.betteranimations.check;
+package com.github.steveplays28.playeranimationrework.animation.check;
 
-import kelvin285.betteranimations.AnimationData;
-import kelvin285.betteranimations.AnimationPriority;
+import com.github.steveplays28.playeranimationrework.animation.AnimationData;
+import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Hand;

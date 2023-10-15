@@ -1,10 +1,10 @@
-package kelvin285.betteranimations.check;
+package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
-import kelvin285.betteranimations.AnimationData;
-import kelvin285.betteranimations.AnimationPriority;
-import kelvin285.betteranimations.BetterAnimations;
+import com.github.steveplays28.playeranimationrework.animation.AnimationData;
+import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
+import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.BoatEntity;
@@ -46,7 +46,7 @@ public class BoatAnimationCheck implements AnimationCheck {
     @Override
     public AnimationData getAnimationData() {
         KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-                new Identifier(BetterAnimations.MOD_ID, this.selectedAnimationName)
+                new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
         );
 
         return new AnimationData(animation, 1.0f, 5);

@@ -1,4 +1,4 @@
-package kelvin285.betteranimations;
+package com.github.steveplays28.playeranimationrework.animation;
 
 public enum AnimationPriority {
     WALK(1),

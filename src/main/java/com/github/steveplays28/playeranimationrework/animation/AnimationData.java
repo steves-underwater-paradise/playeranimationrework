@@ -1,4 +1,4 @@
-package kelvin285.betteranimations;
+package com.github.steveplays28.playeranimationrework.animation;
 
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;

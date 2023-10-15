@@ -1,24 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "betteranimations",
+  "id": "player-animation-rework",
   "version": "${version}",
-  "name": "Kelvin's Better Animations",
-  "description": "Are you tired of the boring, stiff default player animations?  Well this is for you!",
+  "name": "Player Animation Rework",
+  "description": "Are you tired of the stiff and boring default player animations? Then this is for you!",
   "authors": [
-    "7enuT",
-    "Kelvin285"
+    "Steveplays28",
+    "Kelvin285",
+    "7enuT"
   ],
   "contact": {},
-  "license": "All-Rights-Reserved",
-  "icon": "icon.png",
+  "license": "MIT",
+  "icon": "assets/playeranimationrework/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "kelvin285.betteranimations.BetterAnimations"
+      "com.github.steveplays28.playeranimationrework.PlayerAnimationRework"
     ]
   },
   "mixins": [
-    "kelvins_betteranimations.mixins.json"
+    "playeranimationrework.mixin.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.21",

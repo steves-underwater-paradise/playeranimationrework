@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.mixin;
+package com.github.steveplays28.playeranimationrework.mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
