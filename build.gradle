@@ -1,9 +1,12 @@
+//file:noinspection GroovyAccessibility
+//file:noinspection GroovyAssignabilityCheck
+
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = project.mod_version
+version = "${project.mod_version}+mc${project.supported_minecraft_version}"
 group = project.maven_group
 
 repositories {
@@ -12,9 +15,18 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+
     maven {
-        name "KosmX's maven"
-        url 'https://maven.kosmx.dev/'
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+
+    maven {
+        name = "KosmX's maven"
+        url = "https://maven.kosmx.dev"
     }
 }
 
@@ -24,10 +36,11 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim}")
+    // PlayerAnimator
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator}")
 }
 
 processResources {
@@ -83,5 +96,19 @@ publishing {
         // Notice: This block does NOT have the same function as the block in the top level.
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
+    }
+}
+
+loom {
+    runs {
+        clientOptimised {
+            name "Client Extended Compat Optimised"
+
+            dependencies {
+                modRuntimeOnly "maven.modrinth:lazydfu:4SHylIO9"
+            }
+
+            client()
+        }
     }
 }
