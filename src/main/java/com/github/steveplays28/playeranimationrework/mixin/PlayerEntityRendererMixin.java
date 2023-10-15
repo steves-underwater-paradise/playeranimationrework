@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
-
 	// TODO: Use better way to get tick delta
 	@Unique
 	private final float tickDelta = 0.05f;
@@ -34,16 +33,15 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	@Unique
 	private float turnDelta = 0;
 
+	@Shadow
+	protected abstract void setModelPose(AbstractClientPlayerEntity player);
+
 	public PlayerEntityRendererMixin(EntityRendererFactory.Context ctx, PlayerEntityModel<AbstractClientPlayerEntity> model, float shadowRadius) {
 		super(ctx, model, shadowRadius);
 	}
 
-	@Shadow
-	protected abstract void setModelPose(AbstractClientPlayerEntity player);
-
 	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", cancellable = true)
 	public void render(AbstractClientPlayerEntity player, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
-
 		if (!MinecraftClient.getInstance().gameRenderer.getCamera().isThirdPerson() && player == MinecraftClient.getInstance().player) {
 			return;
 		}
@@ -87,10 +85,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
 		if (!player.isFallFlying()) {
 			Quaternionf quat = new Quaternionf();
-			quat = new Matrix4f().rotate(leanX, new Vector3f(1, 0, 0)).rotate(
-					leanZ,
-					new Vector3f(0, 0, 1)
-			).getNormalizedRotation(quat);
+			quat = new Matrix4f().rotate(leanX, new Vector3f(1, 0, 0)).rotate(leanZ, new Vector3f(0, 0, 1)).getNormalizedRotation(quat);
 
 			matrixStack.multiply(quat);
 			this.setModelPose(player);
