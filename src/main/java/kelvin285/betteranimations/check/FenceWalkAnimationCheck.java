@@ -1,45 +1,40 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import kelvin285.betteranimations.AnimationData;
 import kelvin285.betteranimations.AnimationPriority;
 import kelvin285.betteranimations.BetterAnimations;
+import net.minecraft.block.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
 
-public class BoatAnimationCheck implements AnimationCheck {
-    private static final String IDLE_ANIMATION_NAME = "boat_idle";
-    private static final String FORWARD_ANIMATION_NAME = "boat_forward";
-    private static final String LEFT_PADDLE_ANIMATION_NAME = "boat_left_paddle";
-    private static final String RIGHT_PADDLE_ANIMATION_NAME = "boat_right_paddle";
+public class FenceWalkAnimationCheck implements AnimationCheck {
+
+    private static final String IDLE_ANIMATION_NAME = "fence_idle";
+    private static final String WALK_ANIMATION_NAME = "fence_walk";
 
     private boolean shouldPlay = false;
     private String selectedAnimationName;
 
     @Override
     public void tick(AbstractClientPlayerEntity player) {
-        Entity vehicle = player.getControllingVehicle();
+        Block standingBlock = player.getWorld().getBlockState(player.getBlockPos().down()).getBlock();
+        boolean onThinBlock = (standingBlock instanceof FenceBlock || standingBlock instanceof WallBlock ||
+                standingBlock instanceof PaneBlock) && player.isOnGround();
 
-        if(!(vehicle instanceof BoatEntity)) {
+        if(!onThinBlock) {
             return;
         }
 
         this.shouldPlay = true;
 
-        boolean leftPaddleMoving = ((BoatEntity) vehicle).isPaddleMoving(0);
-        boolean rightPaddleMoving = ((BoatEntity) vehicle).isPaddleMoving(1);
+        boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 
-        if(leftPaddleMoving && rightPaddleMoving) {
-            this.selectedAnimationName = FORWARD_ANIMATION_NAME;
-        } else if(leftPaddleMoving) {
-            this.selectedAnimationName = LEFT_PADDLE_ANIMATION_NAME;
-        } else if(rightPaddleMoving) {
-            this.selectedAnimationName = RIGHT_PADDLE_ANIMATION_NAME;
+        if(isMoving) {
+            selectedAnimationName = WALK_ANIMATION_NAME;
         } else {
-            this.selectedAnimationName = IDLE_ANIMATION_NAME;
+            selectedAnimationName = IDLE_ANIMATION_NAME;
         }
     }
 
@@ -54,7 +49,7 @@ public class BoatAnimationCheck implements AnimationCheck {
 
     @Override
     public AnimationPriority getPriority() {
-        return AnimationPriority.BOAT;
+        return AnimationPriority.FENCE_WALK;
     }
 
     @Override

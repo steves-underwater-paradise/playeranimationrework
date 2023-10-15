@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -8,28 +8,26 @@ import kelvin285.betteranimations.BetterAnimations;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class SprintAnimationCheck implements AnimationCheck {
-
-    private static final String ANIMATION_NAME = "running";
-    private static final String STOP_ANIMATION_NAME = "sprint_stop";
+public class ClimbingAnimationCheck implements AnimationCheck {
+    private static final String IDLE_ANIMATION_NAME = "climbing_idle";
+    private static final String WALK_ANIMATION_NAME = "climbing";
 
     private boolean shouldPlay = false;
-    private boolean lastSprinting = false;
     private String selectedAnimationName;
-    private int fadeTime = 5;
 
     @Override
     public void tick(AbstractClientPlayerEntity player) {
-        if(player.isSprinting()) {
-            this.selectedAnimationName = ANIMATION_NAME;
-            this.shouldPlay = true;
-        } else if(lastSprinting) {
-            this.selectedAnimationName = STOP_ANIMATION_NAME;
-            this.fadeTime = 2;
-            this.shouldPlay = true;
+        if(!player.isClimbing()) {
+            return;
         }
 
-        this.lastSprinting = player.isSprinting();
+        this.shouldPlay = true;
+
+        if(Math.abs(player.getY() - player.prevY) > 0) {
+            this.selectedAnimationName = WALK_ANIMATION_NAME;
+        } else {
+            this.selectedAnimationName = IDLE_ANIMATION_NAME;
+        }
     }
 
     @Override
@@ -38,12 +36,12 @@ public class SprintAnimationCheck implements AnimationCheck {
                 new Identifier(BetterAnimations.MOD_ID, this.selectedAnimationName)
         );
 
-        return new AnimationData(animation, 1.0f, fadeTime);
+        return new AnimationData(animation, 1.0f, 5);
     }
 
     @Override
     public AnimationPriority getPriority() {
-        return AnimationPriority.SPRINT;
+        return AnimationPriority.CLIMBING;
     }
 
     @Override
@@ -55,6 +53,5 @@ public class SprintAnimationCheck implements AnimationCheck {
     public void cleanup() {
         this.shouldPlay = false;
         this.selectedAnimationName = null;
-        this.fadeTime = 5;
     }
 }

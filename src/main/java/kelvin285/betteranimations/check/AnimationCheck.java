@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import kelvin285.betteranimations.AnimationData;
 import kelvin285.betteranimations.AnimationPriority;

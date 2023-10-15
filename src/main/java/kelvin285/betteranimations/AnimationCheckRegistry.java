@@ -1,7 +1,7 @@
 package kelvin285.betteranimations;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import kelvin285.betteranimations.checks.AnimationCheck;
+import kelvin285.betteranimations.check.AnimationCheck;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Hand;

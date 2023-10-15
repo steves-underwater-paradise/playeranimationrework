@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -8,20 +8,20 @@ import kelvin285.betteranimations.BetterAnimations;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class SwimAnimationCheck implements AnimationCheck {
-    private static final String SWIM_IDLE_ANIMATION_NAME = "swim_idle";
+public class EatingAnimationCheck implements AnimationCheck {
+    private static final String ANIMATION_NAME = "eating";
 
     private boolean shouldPlay = false;
 
     @Override
     public void tick(AbstractClientPlayerEntity player) {
-        this.shouldPlay = player.isInsideWaterOrBubbleColumn() && !player.isInSwimmingPose();
+        this.shouldPlay = player.isUsingItem() && player.getActiveItem().getItem().isFood();
     }
 
     @Override
     public AnimationData getAnimationData() {
         KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-                new Identifier(BetterAnimations.MOD_ID, SWIM_IDLE_ANIMATION_NAME)
+                new Identifier(BetterAnimations.MOD_ID, ANIMATION_NAME)
         );
 
         return new AnimationData(animation, 1.0f, 5);
@@ -29,7 +29,7 @@ public class SwimAnimationCheck implements AnimationCheck {
 
     @Override
     public AnimationPriority getPriority() {
-        return AnimationPriority.SWIM;
+        return AnimationPriority.EATING;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -8,29 +8,35 @@ import kelvin285.betteranimations.BetterAnimations;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
-public class WalkAnimationCheck implements AnimationCheck {
-    private static final String IDLE_ANIMATION_NAME = "idle";
-    private static final String WALK_ANIMATION_NAME = "walking";
+public class TurnAnimationCheck implements AnimationCheck {
+    private static final String TURN_LEFT_ANIMATION_NAME = "turn_left";
+    private static final String TURN_RIGHT_ANIMATION_NAME = "turn_right";
 
     private boolean shouldPlay = false;
     private String selectedAnimationName;
+    private float lastBodyYaw;
 
     @Override
     public void tick(AbstractClientPlayerEntity player) {
-        if(!player.isOnGround()) {
-            return;
-        }
-
-        this.shouldPlay = true;
-
-        // TODO: Sync feet movement to floor
         boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 
         if(isMoving) {
-            this.selectedAnimationName = WALK_ANIMATION_NAME;
-        } else {
-            this.selectedAnimationName = IDLE_ANIMATION_NAME;
+            return;
         }
+
+        int bodyYawDelta = (int) (player.getBodyYaw() - this.lastBodyYaw);
+
+        if(Math.abs(bodyYawDelta) > 0) {
+            if(bodyYawDelta < 0) {
+                this.selectedAnimationName = TURN_LEFT_ANIMATION_NAME;
+            } else {
+                this.selectedAnimationName = TURN_RIGHT_ANIMATION_NAME;
+            }
+
+            this.shouldPlay = true;
+        }
+
+        this.lastBodyYaw = player.getBodyYaw();
     }
 
     @Override
@@ -44,7 +50,7 @@ public class WalkAnimationCheck implements AnimationCheck {
 
     @Override
     public AnimationPriority getPriority() {
-        return AnimationPriority.WALK;
+        return AnimationPriority.TURN;
     }
 
     @Override

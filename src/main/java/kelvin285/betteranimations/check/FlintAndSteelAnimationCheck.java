@@ -1,4 +1,4 @@
-package kelvin285.betteranimations.checks;
+package kelvin285.betteranimations.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
