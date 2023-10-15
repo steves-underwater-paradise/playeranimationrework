@@ -10,40 +10,41 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import org.jetbrains.annotations.NotNull;
 
 public class AnimationData {
-    private KeyframeAnimation animation;
-    private final float speed;
-    private final int fade;
+	private final float speed;
+	private final int fade;
+	private KeyframeAnimation animation;
 
-    public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade) {
-        this.animation = animation;
-        this.speed = speed;
-        this.fade = fade;
-    }
+	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade) {
+		this.animation = animation;
+		this.speed = speed;
+		this.fade = fade;
+	}
 
-    public KeyframeAnimation getKeyframeAnimation() {
-        return this.animation;
-    }
-    public void setKeyframeAnimation(KeyframeAnimation keyframeAnimation) {
-        this.animation = keyframeAnimation;
-    }
+	public KeyframeAnimation getKeyframeAnimation() {
+		return this.animation;
+	}
 
-    public void setAnimation(ModifierLayer<IAnimation> animationContainer) {
-        if(animationContainer.size() > 0) {
-            animationContainer.removeModifier(0);
-        }
+	public void setKeyframeAnimation(KeyframeAnimation keyframeAnimation) {
+		this.animation = keyframeAnimation;
+	}
 
-        if(this.speed != 1.0f) {
-            animationContainer.addModifier(new SpeedModifier(this.speed), 0);
-        }
+	public void setAnimation(ModifierLayer<IAnimation> animationContainer) {
+		if (animationContainer.size() > 0) {
+			animationContainer.removeModifier(0);
+		}
 
-        IAnimation animationPlayer = new KeyframeAnimationPlayer(this.animation);
+		if (this.speed != 1.0f) {
+			animationContainer.addModifier(new SpeedModifier(this.speed), 0);
+		}
 
-        if(this.fade == 0) {
-            animationContainer.setAnimation(animationPlayer);
-        } else {
-            animationContainer.replaceAnimationWithFade(
-                    AbstractFadeModifier.standardFadeIn(this.fade, Ease.LINEAR), animationPlayer
-            );
-        }
-    }
+		IAnimation animationPlayer = new KeyframeAnimationPlayer(this.animation);
+
+		if (this.fade == 0) {
+			animationContainer.setAnimation(animationPlayer);
+		} else {
+			animationContainer.replaceAnimationWithFade(
+					AbstractFadeModifier.standardFadeIn(this.fade, Ease.LINEAR), animationPlayer
+			);
+		}
+	}
 }

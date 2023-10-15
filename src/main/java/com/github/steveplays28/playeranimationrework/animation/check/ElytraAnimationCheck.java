@@ -9,36 +9,36 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class ElytraAnimationCheck implements AnimationCheck {
-    private static final String ANIMATION_NAME = "elytra_fly";
+	private static final String ANIMATION_NAME = "elytra_fly";
 
-    private boolean shouldPlay = false;
+	private boolean shouldPlay = false;
 
-    @Override
-    public void tick(AbstractClientPlayerEntity player) {
-        this.shouldPlay = player.isFallFlying();
-    }
+	@Override
+	public void tick(AbstractClientPlayerEntity player) {
+		this.shouldPlay = player.isFallFlying();
+	}
 
-    @Override
-    public AnimationData getAnimationData() {
-        KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-                new Identifier(PlayerAnimationRework.MOD_ID, ANIMATION_NAME)
-        );
+	@Override
+	public AnimationData getAnimationData() {
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
+				new Identifier(PlayerAnimationRework.MOD_ID, ANIMATION_NAME)
+		);
 
-        return new AnimationData(animation, 1.0f, 5);
-    }
+		return new AnimationData(animation, 1.0f, 5);
+	}
 
-    @Override
-    public AnimationPriority getPriority() {
-        return AnimationPriority.ELYTRA;
-    }
+	@Override
+	public AnimationPriority getPriority() {
+		return AnimationPriority.ELYTRA;
+	}
 
-    @Override
-    public boolean getShouldPlay() {
-        return this.shouldPlay;
-    }
+	@Override
+	public boolean getShouldPlay() {
+		return this.shouldPlay;
+	}
 
-    @Override
-    public void cleanup() {
-        this.shouldPlay = false;
-    }
+	@Override
+	public void cleanup() {
+		this.shouldPlay = false;
+	}
 }

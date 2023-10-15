@@ -14,58 +14,58 @@ import net.minecraft.util.Identifier;
 import java.util.Objects;
 
 public class PunchAnimationCheck implements AnimationCheck {
-    private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};
-    private static final String SNEAK_ANIMATION_SUFFIX = "_sneak";
+	private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};
+	private static final String SNEAK_ANIMATION_SUFFIX = "_sneak";
 
-    private boolean shouldPlay = false;
-    private String selectedAnimationName;
+	private boolean shouldPlay = false;
+	private String selectedAnimationName;
 
-    @Override
-    public void swingHand(AbstractClientPlayerEntity player, Hand hand) {
-        if (player.handSwinging && player.handSwingTicks < this.getHandSwingDuration(player) / 2
-                && player.handSwingTicks > 0) {
-            return;
-        }
+	@Override
+	public void swingHand(AbstractClientPlayerEntity player, Hand hand) {
+		if (player.handSwinging && player.handSwingTicks < this.getHandSwingDuration(player) / 2
+				&& player.handSwingTicks > 0) {
+			return;
+		}
 
-        this.shouldPlay = true;
-        this.selectedAnimationName = ANIMATION_NAMES[hand == Hand.MAIN_HAND ? 1 : 0];
+		this.shouldPlay = true;
+		this.selectedAnimationName = ANIMATION_NAMES[hand == Hand.MAIN_HAND ? 1 : 0];
 
-        if(player.isSneaking()) {
-            this.selectedAnimationName += SNEAK_ANIMATION_SUFFIX;
-        }
-    }
+		if (player.isSneaking()) {
+			this.selectedAnimationName += SNEAK_ANIMATION_SUFFIX;
+		}
+	}
 
-    private int getHandSwingDuration(AbstractClientPlayerEntity player) {
-        if (StatusEffectUtil.hasHaste(player)) {
-            return 6 - (1 + StatusEffectUtil.getHasteAmplifier(player));
-        } else {
-            return player.hasStatusEffect(StatusEffects.MINING_FATIGUE) ? 6 + (1 + Objects.requireNonNull(
-                    player.getStatusEffect(StatusEffects.MINING_FATIGUE)).getAmplifier()) * 2 : 6;
-        }
-    }
+	private int getHandSwingDuration(AbstractClientPlayerEntity player) {
+		if (StatusEffectUtil.hasHaste(player)) {
+			return 6 - (1 + StatusEffectUtil.getHasteAmplifier(player));
+		} else {
+			return player.hasStatusEffect(StatusEffects.MINING_FATIGUE) ? 6 + (1 + Objects.requireNonNull(
+					player.getStatusEffect(StatusEffects.MINING_FATIGUE)).getAmplifier()) * 2 : 6;
+		}
+	}
 
-    @Override
-    public AnimationData getAnimationData() {
-        KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
-                new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
-        );
+	@Override
+	public AnimationData getAnimationData() {
+		KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(
+				new Identifier(PlayerAnimationRework.MOD_ID, this.selectedAnimationName)
+		);
 
-        return new AnimationData(animation, 1.0f, 5);
-    }
+		return new AnimationData(animation, 1.0f, 5);
+	}
 
-    @Override
-    public AnimationPriority getPriority() {
-        return AnimationPriority.PUNCH;
-    }
+	@Override
+	public AnimationPriority getPriority() {
+		return AnimationPriority.PUNCH;
+	}
 
-    @Override
-    public boolean getShouldPlay() {
-        return this.shouldPlay;
-    }
+	@Override
+	public boolean getShouldPlay() {
+		return this.shouldPlay;
+	}
 
-    @Override
-    public void cleanup() {
-        this.shouldPlay = false;
-        this.selectedAnimationName = null;
-    }
+	@Override
+	public void cleanup() {
+		this.shouldPlay = false;
+		this.selectedAnimationName = null;
+	}
 }
