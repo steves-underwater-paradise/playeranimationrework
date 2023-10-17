@@ -3,6 +3,7 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
+import dev.kosmx.playerAnim.core.util.Ease;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -15,7 +16,7 @@ public class SprintAnimationCheck implements AnimationCheck {
 	private static final String STOP_ANIMATION_NAME = "sprint_stop";
 
 	private boolean shouldPlay = false;
-	private boolean lastSprinting = false;
+	private boolean wasPlayerSprintingLastTick = false;
 	private String selectedAnimationName;
 	private int fadeTime = 5;
 
@@ -29,13 +30,13 @@ public class SprintAnimationCheck implements AnimationCheck {
 		if (player.isSprinting()) {
 			this.selectedAnimationName = ANIMATION_NAME;
 			this.shouldPlay = true;
-		} else if (lastSprinting) {
+		} else if (wasPlayerSprintingLastTick) {
 			this.selectedAnimationName = STOP_ANIMATION_NAME;
 			this.fadeTime = 2;
 			this.shouldPlay = true;
 		}
 
-		this.lastSprinting = player.isSprinting();
+		this.wasPlayerSprintingLastTick = player.isSprinting();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class SprintAnimationCheck implements AnimationCheck {
 	@Override
 	public AnimationData getAnimationData() {
 		KeyframeAnimation animation = getAnimation(selectedAnimationName);
-		return new AnimationData(animation, 1.0f, fadeTime);
+		return new AnimationData(animation, 1f, fadeTime, Ease.INOUTSINE);
 	}
 
 	@Override
