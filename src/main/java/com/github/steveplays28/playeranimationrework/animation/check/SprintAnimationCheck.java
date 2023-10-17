@@ -3,8 +3,11 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 
+import static com.github.steveplays28.playeranimationrework.PlayerAnimationRework.SLIDE_SOUND_EVENT;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class SprintAnimationCheck implements AnimationCheck {
@@ -15,6 +18,11 @@ public class SprintAnimationCheck implements AnimationCheck {
 	private boolean lastSprinting = false;
 	private String selectedAnimationName;
 	private int fadeTime = 5;
+
+	@Override
+	public String getSelectedAnimationName() {
+		return selectedAnimationName;
+	}
 
 	@Override
 	public void tick(AbstractClientPlayerEntity player) {
@@ -28,6 +36,19 @@ public class SprintAnimationCheck implements AnimationCheck {
 		}
 
 		this.lastSprinting = player.isSprinting();
+	}
+
+	@Override
+	public void onPlay(AbstractClientPlayerEntity player, String selectedAnimationName) {
+		if (!selectedAnimationName.equals(STOP_ANIMATION_NAME)) {
+			return;
+		}
+
+		// Play slide sound
+		var world = MinecraftClient.getInstance().world;
+		if (world != null) {
+			world.playSound(player, player.getBlockPos(), SLIDE_SOUND_EVENT, SoundCategory.PLAYERS);
+		}
 	}
 
 	@Override

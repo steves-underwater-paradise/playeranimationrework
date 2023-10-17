@@ -6,7 +6,6 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import com.github.steveplays28.playeranimationrework.animation.AnimationCheckRegistry;
-import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import net.minecraft.block.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -58,12 +57,17 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 		super.tick();
 		checkRegistry.invokeTick((AbstractClientPlayerEntity) (Object) this);
 
-		AnimationData animation = checkRegistry.getMostSuitableAnimation();
-		if (animation == null && !checkRegistry.animationSameAsPreviousOne()) {
-			modAnimationContainer.setAnimation(null);
-		} else if (animation != null) {
-			// TODO: Disable arm animations when using an item with its own third-person animation
-			animation.setAnimation(modAnimationContainer);
+		AnimationCheck animationCheck = checkRegistry.getMostSuitableAnimation();
+		if (animationCheck != null) {
+			var animationData = animationCheck.getAnimationData();
+
+			if (animationData == null && !checkRegistry.animationSameAsPreviousOne()) {
+				modAnimationContainer.setAnimation(null);
+			} else if (animationData != null) {
+				// TODO: Disable arm animations when using an item with its own third-person animation
+				animationData.setAnimation(modAnimationContainer);
+				animationCheck.onPlay((AbstractClientPlayerEntity) (Object) this, animationCheck.getSelectedAnimationName());
+			}
 		}
 
 		checkRegistry.invokeCleanup();

@@ -14,6 +14,10 @@ public interface AnimationCheck {
 
 	boolean getShouldPlay();
 
+	default String getSelectedAnimationName() {
+		return null;
+	}
+
 	default void tick(AbstractClientPlayerEntity player) {}
 
 	default void jump(AbstractClientPlayerEntity player) {}
@@ -21,6 +25,8 @@ public interface AnimationCheck {
 	default void swingHand(AbstractClientPlayerEntity player, Hand hand) {}
 
 	default void fall(AbstractClientPlayerEntity player, double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {}
+
+	default void onPlay(AbstractClientPlayerEntity player, String selectedAnimationName) {}
 
 	default void cleanup() {}
 }

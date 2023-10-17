@@ -56,7 +56,7 @@ public class AnimationCheckRegistry {
 	}
 
 	@Nullable
-	public AnimationData getMostSuitableAnimation() {
+	public AnimationCheck getMostSuitableAnimation() {
 		AnimationCheck mostSuitableAnimation = null;
 
 		for (AnimationCheck check : checks) {
@@ -78,7 +78,7 @@ public class AnimationCheckRegistry {
 		if (this.animationSameAsPreviousOne()) {
 			return null;
 		} else {
-			return mostSuitableAnimation.getAnimationData();
+			return mostSuitableAnimation;
 		}
 	}
 }

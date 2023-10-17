@@ -1,0 +1,11 @@
+{
+  "player.slide": {
+    "sounds": [
+      {
+        "name": "playeranimationrework:player/slide",
+        "stream": true
+      }
+    ],
+    "category": "player"
+  }
+}
