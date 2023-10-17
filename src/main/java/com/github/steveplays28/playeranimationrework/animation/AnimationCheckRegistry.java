@@ -72,6 +72,10 @@ public class AnimationCheckRegistry {
 			}
 		}
 
+		if (mostSuitableAnimation == null) {
+			return null;
+		}
+
 		this.lastKeyframeAnimation = this.currentKeyframeAnimation;
 		this.currentKeyframeAnimation = mostSuitableAnimation.getAnimationData().getKeyframeAnimation();
 
