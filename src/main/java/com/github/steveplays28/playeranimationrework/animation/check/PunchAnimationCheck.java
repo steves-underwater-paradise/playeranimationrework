@@ -1,7 +1,6 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -12,7 +11,6 @@ import net.minecraft.util.Hand;
 import java.util.Objects;
 
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class PunchAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};
@@ -47,7 +45,7 @@ public class PunchAnimationCheck implements AnimationCheck {
 	@Override
 	public AnimationData getAnimationData() {
 		KeyframeAnimation animation = getAnimation(selectedAnimationName);
-		return new AnimationData(animation, 1.0f, 5);
+		return new AnimationData(animation, 0.2f, 0);
 	}
 
 	@Override

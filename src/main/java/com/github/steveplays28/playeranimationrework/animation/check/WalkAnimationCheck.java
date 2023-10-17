@@ -1,13 +1,11 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class WalkAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "idle";

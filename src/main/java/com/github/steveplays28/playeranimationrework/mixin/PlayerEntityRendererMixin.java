@@ -1,5 +1,6 @@
 package com.github.steveplays28.playeranimationrework.mixin;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -18,6 +19,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import static com.github.steveplays28.playeranimationrework.PlayerAnimationRework.REAL_CAMERA_MOD_ID;
 
 @Mixin(PlayerEntityRenderer.class)
 public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>> {
@@ -41,8 +44,9 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 	}
 
 	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", cancellable = true)
-	public void render(AbstractClientPlayerEntity player, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo info) {
-		if (!MinecraftClient.getInstance().gameRenderer.getCamera().isThirdPerson() && player == MinecraftClient.getInstance().player) {
+	public void render(AbstractClientPlayerEntity player, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+		if (!MinecraftClient.getInstance().gameRenderer.getCamera().isThirdPerson() && player == MinecraftClient.getInstance().player || FabricLoader.getInstance().isModLoaded(
+				REAL_CAMERA_MOD_ID)) {
 			return;
 		}
 
@@ -51,7 +55,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 		float leanX = (float) player.getVelocity().z;
 		float leanZ = -(float) player.getVelocity().x;
 		float bodyYawDelta = player.getYaw() - player.prevYaw;
-
 		boolean isWalking = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 
 		if (turnDelta != 0) {
@@ -94,6 +97,6 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 		super.render(player, f, g, matrixStack, vertexConsumerProvider, i);
 		matrixStack.pop();
 
-		info.cancel();
+		ci.cancel();
 	}
 }
