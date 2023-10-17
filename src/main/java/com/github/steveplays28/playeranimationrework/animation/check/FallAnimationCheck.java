@@ -1,7 +1,6 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.block.BlockState;
@@ -9,7 +8,6 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
 
 public class FallAnimationCheck implements AnimationCheck {
 	private static final String LONG_FALL_ANIMATION_NAME = "falling";
