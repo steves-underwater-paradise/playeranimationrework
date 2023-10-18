@@ -1,6 +1,5 @@
 package com.github.steveplays28.playeranimationrework.animation;
 
-import com.github.steveplays28.playeranimationrework.PlayerAnimationRework;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;

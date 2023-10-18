@@ -5,7 +5,7 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import static com.github.steveplays28.playeranimationrework.PlayerAnimationRework.MOD_NAMESPACE;
+import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.MOD_NAMESPACE;
 
 public class AnimationUtil {
 	public static @NotNull Identifier getAnimationIdentifier(String animationName) {

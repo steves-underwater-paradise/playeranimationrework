@@ -7,6 +7,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.SwordItem;
 import net.minecraft.util.Hand;
@@ -36,7 +37,7 @@ public class PunchAnimationCheck implements AnimationCheck {
 
 		if (equippedItem instanceof SwordItem) {
 			selectedAnimationName = SWORD_SWING_RIGHT_ANIMATION_NAMES[RANDOM.nextInt(SWORD_SWING_RIGHT_ANIMATION_NAMES.length)];
-		} else if (equippedItem instanceof PickaxeItem) {
+		} else if (equippedItem instanceof PickaxeItem || equippedItem instanceof AxeItem) {
 			selectedAnimationName = PICKAXE_MINE_RIGHT_ANIMATION_NAME;
 		} else {
 			selectedAnimationName = ANIMATION_NAMES[hand == Hand.MAIN_HAND ? 1 : 0];

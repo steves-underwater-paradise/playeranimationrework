@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 
-import static com.github.steveplays28.playeranimationrework.PlayerAnimationRework.SLIDE_SOUND_EVENT;
+import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.SLIDE_SOUND_EVENT;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class SprintAnimationCheck implements AnimationCheck {

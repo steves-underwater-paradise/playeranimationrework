@@ -15,7 +15,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.github.steveplays28.playeranimationrework.PlayerAnimationRework"
+      "com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient"
     ]
   },
   "mixins": [

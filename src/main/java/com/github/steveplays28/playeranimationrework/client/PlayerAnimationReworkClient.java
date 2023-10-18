@@ -1,4 +1,4 @@
-package com.github.steveplays28.playeranimationrework;
+package com.github.steveplays28.playeranimationrework.client;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Environment(EnvType.CLIENT)
-public class PlayerAnimationRework implements ClientModInitializer {
+public class PlayerAnimationReworkClient implements ClientModInitializer {
 	public static final String MOD_ID = "player-animation-rework";
 	public static final String MOD_NAMESPACE = "playeranimationrework";
 	public static final String MOD_NAME = "Player Animation Rework";
