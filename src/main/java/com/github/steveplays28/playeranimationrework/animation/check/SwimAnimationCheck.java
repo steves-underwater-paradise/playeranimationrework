@@ -2,13 +2,20 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
+import com.github.steveplays28.playeranimationrework.animation.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
+import java.util.ArrayList;
+
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.*;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
 
 public class SwimAnimationCheck implements AnimationCheck {
 	private static final String SWIM_ANIMATION_NAME = "swimming";
 	private static final String SWIM_IDLE_ANIMATION_NAME = "swim_idle";
+
+	private final ArrayList<ModelPart> disabledModelParts = new ArrayList<>();
 
 	private boolean shouldPlay = false;
 	private String selectedAnimationName;
@@ -22,11 +29,24 @@ public class SwimAnimationCheck implements AnimationCheck {
 			shouldPlay = true;
 			selectedAnimationName = SWIM_IDLE_ANIMATION_NAME;
 		}
+
+		if (getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disabledModelParts.add(ModelPart.LEFT_ARM);
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
+
+		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
 	}
 
 	@Override
 	public AnimationData getAnimationData() {
-		return new AnimationData(getAnimation(selectedAnimationName), 1.0f, 5);
+		return new AnimationData(getAnimation(selectedAnimationName), 1.0f, 5, disabledModelParts);
 	}
 
 	@Override
