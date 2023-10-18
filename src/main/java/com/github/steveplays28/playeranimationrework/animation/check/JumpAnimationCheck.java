@@ -58,5 +58,6 @@ public class JumpAnimationCheck implements AnimationCheck {
 	@Override
 	public void cleanup() {
 		this.shouldPlay = false;
+		disabledModelParts.clear();
 	}
 }

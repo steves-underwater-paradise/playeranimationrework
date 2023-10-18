@@ -76,5 +76,6 @@ public class TurnAnimationCheck implements AnimationCheck {
 	public void cleanup() {
 		this.shouldPlay = false;
 		this.selectedAnimationName = null;
+		disabledModelParts.clear();
 	}
 }

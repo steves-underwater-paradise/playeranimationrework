@@ -61,6 +61,7 @@ public class SwimAnimationCheck implements AnimationCheck {
 
 	@Override
 	public void cleanup() {
-		this.shouldPlay = false;
+		shouldPlay = false;
+		disabledModelParts.clear();
 	}
 }

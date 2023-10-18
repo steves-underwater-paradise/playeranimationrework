@@ -90,5 +90,6 @@ public class SprintAnimationCheck implements AnimationCheck {
 		this.shouldPlay = false;
 		this.selectedAnimationName = null;
 		this.fadeTime = 5;
+		disabledModelParts.clear();
 	}
 }

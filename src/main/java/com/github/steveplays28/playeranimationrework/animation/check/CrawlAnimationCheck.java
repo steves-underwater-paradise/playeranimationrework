@@ -63,5 +63,6 @@ public class CrawlAnimationCheck implements AnimationCheck {
 	public void cleanup() {
 		this.selectedAnimationName = null;
 		this.shouldPlay = false;
+		disabledModelParts.clear();
 	}
 }

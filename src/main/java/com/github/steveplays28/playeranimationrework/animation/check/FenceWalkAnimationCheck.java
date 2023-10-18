@@ -73,5 +73,6 @@ public class FenceWalkAnimationCheck implements AnimationCheck {
 	public void cleanup() {
 		this.shouldPlay = false;
 		this.selectedAnimationName = null;
+		disabledModelParts.clear();
 	}
 }
