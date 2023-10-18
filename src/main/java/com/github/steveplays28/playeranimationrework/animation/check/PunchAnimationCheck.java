@@ -4,17 +4,24 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.util.Hand;
 
 import java.util.Objects;
+import java.util.Random;
 
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class PunchAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};
+	private static final String[] SWORD_SWING_RIGHT_ANIMATION_NAMES = new String[]{"sword_swing_right", "sword_swing_right_2"};
+	private static final String PICKAXE_MINE_RIGHT_ANIMATION_NAME = "mine_right";
 	private static final String SNEAK_ANIMATION_SUFFIX = "_sneak";
+	private static final Random RANDOM = new Random();
 
 	private boolean shouldPlay = false;
 	private String selectedAnimationName;
@@ -25,12 +32,20 @@ public class PunchAnimationCheck implements AnimationCheck {
 			return;
 		}
 
-		this.shouldPlay = true;
-		this.selectedAnimationName = ANIMATION_NAMES[hand == Hand.MAIN_HAND ? 1 : 0];
+		var equippedItem = player.getEquippedStack(EquipmentSlot.MAINHAND).getItem();
 
-		if (player.isSneaking()) {
-			this.selectedAnimationName += SNEAK_ANIMATION_SUFFIX;
+		if (equippedItem instanceof SwordItem) {
+			selectedAnimationName = SWORD_SWING_RIGHT_ANIMATION_NAMES[RANDOM.nextInt(SWORD_SWING_RIGHT_ANIMATION_NAMES.length)];
+		} else if (equippedItem instanceof PickaxeItem) {
+			selectedAnimationName = PICKAXE_MINE_RIGHT_ANIMATION_NAME;
+		} else {
+			selectedAnimationName = ANIMATION_NAMES[hand == Hand.MAIN_HAND ? 1 : 0];
+			if (player.isSneaking()) {
+				selectedAnimationName += SNEAK_ANIMATION_SUFFIX;
+			}
 		}
+
+		shouldPlay = true;
 	}
 
 	private int getHandSwingDuration(AbstractClientPlayerEntity player) {
@@ -45,7 +60,7 @@ public class PunchAnimationCheck implements AnimationCheck {
 	@Override
 	public AnimationData getAnimationData() {
 		KeyframeAnimation animation = getAnimation(selectedAnimationName);
-		return new AnimationData(animation, 0.2f, 0);
+		return new AnimationData(animation, 1f, 1);
 	}
 
 	@Override
