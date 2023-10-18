@@ -8,8 +8,8 @@ import net.minecraft.entity.EquipmentSlot;
 
 import java.util.ArrayList;
 
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.*;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
 
 public class TurnAnimationCheck implements AnimationCheck {
 	private static final String TURN_LEFT_ANIMATION_NAME = "turn_left";
@@ -47,6 +47,12 @@ public class TurnAnimationCheck implements AnimationCheck {
 				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
 			disabledModelParts.add(ModelPart.LEFT_ARM);
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
+
+		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
 			disabledModelParts.add(ModelPart.RIGHT_ARM);
 		}
 	}
