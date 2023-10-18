@@ -13,8 +13,8 @@ import net.minecraft.item.SwordItem;
 import net.minecraft.util.Hand;
 
 import java.util.Objects;
-import java.util.Random;
 
+import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.RANDOM;
 import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
 
 public class PunchAnimationCheck implements AnimationCheck {
@@ -22,7 +22,6 @@ public class PunchAnimationCheck implements AnimationCheck {
 	private static final String[] SWORD_SWING_RIGHT_ANIMATION_NAMES = new String[]{"sword_swing_right", "sword_swing_right_2"};
 	private static final String PICKAXE_MINE_RIGHT_ANIMATION_NAME = "mine_right";
 	private static final String SNEAK_ANIMATION_SUFFIX = "_sneak";
-	private static final Random RANDOM = new Random();
 
 	private boolean shouldPlay = false;
 	private String selectedAnimationName;
