@@ -6,7 +6,7 @@ import com.github.steveplays28.playeranimationrework.animation.AnimationPriority
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.item.FlintAndSteelItem;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class FlintAndSteelAnimationCheck implements AnimationCheck {
 	private static final String ANIMATION_NAME = "flint_and_steel";

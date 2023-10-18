@@ -9,10 +9,13 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+
 public class AnimationData {
 	private final float speed;
 	private final int fade;
 	private final Ease fadeEasing;
+	private final ArrayList<ModelPart> disabledModelParts;
 
 	private KeyframeAnimation animation;
 
@@ -21,6 +24,7 @@ public class AnimationData {
 		this.speed = speed;
 		this.fade = fade;
 		this.fadeEasing = Ease.LINEAR;
+		this.disabledModelParts = new ArrayList<>();
 	}
 
 	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, Ease fadeEasing) {
@@ -28,6 +32,23 @@ public class AnimationData {
 		this.speed = speed;
 		this.fade = fade;
 		this.fadeEasing = fadeEasing;
+		this.disabledModelParts = new ArrayList<>();
+	}
+
+	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, ArrayList<ModelPart> disabledModelParts) {
+		this.animation = animation;
+		this.speed = speed;
+		this.fade = fade;
+		this.fadeEasing = Ease.LINEAR;
+		this.disabledModelParts = disabledModelParts;
+	}
+
+	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, Ease fadeEasing, ArrayList<ModelPart> disabledModelParts) {
+		this.animation = animation;
+		this.speed = speed;
+		this.fade = fade;
+		this.fadeEasing = fadeEasing;
+		this.disabledModelParts = disabledModelParts;
 	}
 
 	public KeyframeAnimation getKeyframeAnimation() {
@@ -39,6 +60,9 @@ public class AnimationData {
 	}
 
 	public void setAnimation(ModifierLayer<IAnimation> animationContainer) {
+		// Disable model parts
+		disabledModelParts.forEach(this::disableModelPart);
+
 		if (animationContainer.size() > 0) {
 			animationContainer.removeModifier(0);
 		}
@@ -54,5 +78,19 @@ public class AnimationData {
 		} else {
 			animationContainer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(fade, fadeEasing), animationPlayer);
 		}
+	}
+
+	public void disableModelPart(@NotNull ModelPart modelPart) {
+		var keyframeAnimationBuilder = getKeyframeAnimation().mutableCopy();
+		var keyframeModelPart = keyframeAnimationBuilder.getPart(modelPart.getName());
+		if (keyframeModelPart == null) {
+			throw new IllegalArgumentException(
+					String.format("Model part (disabled by animation %s, made by %s) doesn't exist", animation.extraData.get("name"),
+							animation.extraData.get("author")
+					));
+		}
+
+		keyframeModelPart.setEnabled(false);
+		setKeyframeAnimation(keyframeAnimationBuilder.build());
 	}
 }

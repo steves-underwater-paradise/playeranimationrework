@@ -6,7 +6,7 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class EdgeStandingAnimationCheck implements AnimationCheck {
 	private static final String BALANCE_LOSS_ANIMATION_NAME = "edge_idle";

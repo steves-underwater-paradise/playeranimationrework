@@ -4,7 +4,7 @@ import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class SwimAnimationCheck implements AnimationCheck {
 	private static final String SWIM_ANIMATION_NAME = "swimming";

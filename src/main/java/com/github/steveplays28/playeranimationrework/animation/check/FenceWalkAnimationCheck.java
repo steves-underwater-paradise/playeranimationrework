@@ -2,17 +2,21 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
+import com.github.steveplays28.playeranimationrework.animation.ModelPart;
 import net.minecraft.block.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+import java.util.ArrayList;
+
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
 
 public class FenceWalkAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "fence_idle";
 	private static final String WALK_ANIMATION_NAME = "fence_walk";
+
+	private final ArrayList<ModelPart> disabledModelParts = new ArrayList<>();
 
 	private boolean shouldPlay = false;
 	private String selectedAnimationName;
@@ -35,12 +39,18 @@ public class FenceWalkAnimationCheck implements AnimationCheck {
 		} else {
 			selectedAnimationName = IDLE_ANIMATION_NAME;
 		}
+
+		if (getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disabledModelParts.add(ModelPart.LEFT_ARM);
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
 	}
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = getAnimation(selectedAnimationName);
-		return new AnimationData(animation, 1.0f, 5);
+		return new AnimationData(getAnimation(selectedAnimationName), 1.0f, 5, disabledModelParts);
 	}
 
 	@Override

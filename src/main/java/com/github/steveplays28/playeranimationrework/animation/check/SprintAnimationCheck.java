@@ -1,19 +1,24 @@
 package com.github.steveplays28.playeranimationrework.animation.check;
 
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import com.github.steveplays28.playeranimationrework.animation.ModelPart;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import dev.kosmx.playerAnim.core.util.Ease;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.sound.SoundCategory;
 
+import java.util.ArrayList;
+
 import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.SLIDE_SOUND_EVENT;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.*;
 
 public class SprintAnimationCheck implements AnimationCheck {
 	private static final String ANIMATION_NAME = "running";
 	private static final String STOP_ANIMATION_NAME = "sprint_stop";
+
+	private final ArrayList<ModelPart> disabledModelParts = new ArrayList<>();
 
 	private boolean shouldPlay = false;
 	private boolean wasPlayerSprintingLastTick = false;
@@ -37,6 +42,19 @@ public class SprintAnimationCheck implements AnimationCheck {
 		}
 
 		this.wasPlayerSprintingLastTick = player.isSprinting();
+
+		if (getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disabledModelParts.add(ModelPart.LEFT_ARM);
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
+
+		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disabledModelParts.add(ModelPart.RIGHT_ARM);
+		}
 	}
 
 	@Override
@@ -54,8 +72,7 @@ public class SprintAnimationCheck implements AnimationCheck {
 
 	@Override
 	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = getAnimation(selectedAnimationName);
-		return new AnimationData(animation, 1f, fadeTime, Ease.INOUTSINE);
+		return new AnimationData(getAnimation(selectedAnimationName), 1f, fadeTime, Ease.INOUTSINE, disabledModelParts);
 	}
 
 	@Override

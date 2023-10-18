@@ -15,7 +15,7 @@ import net.minecraft.util.Hand;
 import java.util.Objects;
 
 import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.RANDOM;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class PunchAnimationCheck implements AnimationCheck {
 	private static final String[] ANIMATION_NAMES = new String[]{"punch_left", "punch_right"};

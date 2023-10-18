@@ -7,7 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class FallAnimationCheck implements AnimationCheck {
 	private static final String LONG_FALL_ANIMATION_NAME = "falling";

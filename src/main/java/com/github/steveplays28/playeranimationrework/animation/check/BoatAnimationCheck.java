@@ -7,7 +7,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.vehicle.BoatEntity;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class BoatAnimationCheck implements AnimationCheck {
 	private static final String IDLE_ANIMATION_NAME = "boat_idle";

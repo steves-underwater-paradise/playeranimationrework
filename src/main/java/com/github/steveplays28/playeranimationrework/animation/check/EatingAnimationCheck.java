@@ -3,11 +3,9 @@ package com.github.steveplays28.playeranimationrework.animation.check;
 import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimation;
-import static com.github.steveplays28.playeranimationrework.util.AnimationUtil.getAnimationIdentifier;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
 
 public class EatingAnimationCheck implements AnimationCheck {
 	private static final String ANIMATION_NAME = "eating";
