@@ -1,11 +1,12 @@
 package com.github.steveplays28.playeranimationrework.mixin;
 
-import com.github.steveplays28.playeranimationrework.animation.check.*;
+import com.github.steveplays28.playeranimationrework.animation.Animation;
+import com.github.steveplays28.playeranimationrework.animation.AnimationRegistry;
+import com.github.steveplays28.playeranimationrework.animation.impl.*;
 import com.mojang.authlib.GameProfile;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
-import com.github.steveplays28.playeranimationrework.animation.AnimationCheckRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -27,7 +28,7 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 	@Unique
 	private final ModifierLayer<IAnimation> modAnimationContainer = new ModifierLayer<>();
 	@Unique
-	private final AnimationCheckRegistry checkRegistry = new AnimationCheckRegistry();
+	private final AnimationRegistry animationRegistry = new AnimationRegistry();
 
 	public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
 		super(world, pos, yaw, gameProfile);
@@ -37,60 +38,49 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 	private void init(ClientWorld world, GameProfile profile, CallbackInfo info) {
 		PlayerAnimationAccess.getPlayerAnimLayer((AbstractClientPlayerEntity) (Object) this).addAnimLayer(0, modAnimationContainer);
 
-		checkRegistry.registerAnimationCheck(new BoatAnimationCheck());
-		checkRegistry.registerAnimationCheck(new ClimbingAnimationCheck());
-		checkRegistry.registerAnimationCheck(new CrawlAnimationCheck());
-		checkRegistry.registerAnimationCheck(new EatingAnimationCheck());
-		checkRegistry.registerAnimationCheck(new EdgeStandingAnimationCheck());
-		checkRegistry.registerAnimationCheck(new ElytraAnimationCheck());
-		checkRegistry.registerAnimationCheck(new FallAnimationCheck());
-		checkRegistry.registerAnimationCheck(new FenceWalkAnimationCheck());
-		checkRegistry.registerAnimationCheck(new FlintAndSteelAnimationCheck());
-		checkRegistry.registerAnimationCheck(new JumpAnimationCheck());
-		checkRegistry.registerAnimationCheck(new PunchAnimationCheck());
-		checkRegistry.registerAnimationCheck(new SneakAnimationCheck());
-		checkRegistry.registerAnimationCheck(new SprintAnimationCheck());
-		checkRegistry.registerAnimationCheck(new SwimAnimationCheck());
-		checkRegistry.registerAnimationCheck(new TurnAnimationCheck());
-		checkRegistry.registerAnimationCheck(new WalkAnimationCheck());
+		// TODO: Refactor into an API
+		animationRegistry.registerAnimations(new BoatAnimation(), new ClimbingAnimation(), new CrawlAnimation(), new EatingAnimation(),
+				new EdgeStandingAnimation(), new ElytraAnimation(), new FallAnimation(), new FenceWalkAnimation(),
+				new FlintAndSteelAnimation(), new JumpAnimation(), new PunchAnimation(), new SneakAnimation(), new SprintAnimation(),
+				new SwimAnimation(), new TurnAnimation(), new WalkAnimation()
+		);
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		checkRegistry.invokeTick((AbstractClientPlayerEntity) (Object) this);
+		animationRegistry.invokeTick((AbstractClientPlayerEntity) (Object) this);
 
-		AnimationCheck animationCheck = checkRegistry.getMostSuitableAnimation();
-		if (animationCheck != null) {
-			var animationData = animationCheck.getAnimationData();
+		Animation animation = animationRegistry.getMostSuitableAnimation();
+		if (animation != null) {
+			var animationData = animation.getAnimationData();
 
-			if (animationData == null && !checkRegistry.animationSameAsPreviousOne()) {
+			if (animationData == null && !animationRegistry.isAnimationEqualToPreviousAnimation()) {
 				modAnimationContainer.setAnimation(null);
 			} else if (animationData != null) {
-				// TODO: Disable arm animations when using an item with its own third-person animation
 				animationData.setAnimation(modAnimationContainer);
-				animationCheck.onPlay((AbstractClientPlayerEntity) (Object) this, animationCheck.getSelectedAnimationName());
+				animation.onPlay((AbstractClientPlayerEntity) (Object) this, animation.getSelectedAnimationName());
 			}
 		}
 
-		checkRegistry.invokeCleanup();
+		animationRegistry.invokeCleanup();
 	}
 
 	@Override
 	public void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {
 		super.fall(heightDifference, onGround, state, landedPosition);
-		checkRegistry.invokeFall((AbstractClientPlayerEntity) (Object) this, heightDifference, onGround, state, landedPosition);
+		animationRegistry.invokeFall((AbstractClientPlayerEntity) (Object) this, heightDifference, onGround, state, landedPosition);
 	}
 
 	@Override
 	public void jump() {
 		super.jump();
-		checkRegistry.invokeJump((AbstractClientPlayerEntity) (Object) this);
+		animationRegistry.invokeJump((AbstractClientPlayerEntity) (Object) this);
 	}
 
 	@Override
 	public void swingHand(Hand hand) {
 		super.swingHand(hand);
-		checkRegistry.invokeSwingHand((AbstractClientPlayerEntity) (Object) this, hand);
+		animationRegistry.invokeSwingHand((AbstractClientPlayerEntity) (Object) this, hand);
 	}
 }

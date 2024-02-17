@@ -1,21 +1,17 @@
-package com.github.steveplays28.playeranimationrework.animation.check;
+package com.github.steveplays28.playeranimationrework.animation.impl;
 
-import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import com.github.steveplays28.playeranimationrework.animation.Animation;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getAnimation;
-
-public class EdgeStandingAnimationCheck implements AnimationCheck {
+public class EdgeStandingAnimation extends Animation {
 	private static final String BALANCE_LOSS_ANIMATION_NAME = "edge_idle";
-
-	private boolean shouldPlay = false;
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void tick(AbstractClientPlayerEntity player) {
+	public void tick(@NotNull AbstractClientPlayerEntity player) {
 		boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 		BlockState standingBlockState = player.getWorld().getBlockState(player.getBlockPos().down());
 
@@ -27,23 +23,12 @@ public class EdgeStandingAnimationCheck implements AnimationCheck {
 	}
 
 	@Override
-	public AnimationData getAnimationData() {
-		KeyframeAnimation animation = getAnimation(BALANCE_LOSS_ANIMATION_NAME);
-		return new AnimationData(animation, 1.0f, 5);
+	protected String getNewSelectedAnimationName(@NotNull AbstractClientPlayerEntity player) {
+		return BALANCE_LOSS_ANIMATION_NAME;
 	}
 
 	@Override
 	public AnimationPriority getPriority() {
 		return AnimationPriority.EDGE_STANDING;
-	}
-
-	@Override
-	public boolean getShouldPlay() {
-		return this.shouldPlay;
-	}
-
-	@Override
-	public void cleanup() {
-		this.shouldPlay = false;
 	}
 }

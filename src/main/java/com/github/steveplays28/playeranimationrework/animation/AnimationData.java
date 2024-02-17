@@ -1,5 +1,6 @@
 package com.github.steveplays28.playeranimationrework.animation;
 
+import com.github.steveplays28.playeranimationrework.client.util.AnimationUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -9,46 +10,22 @@ import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class AnimationData {
 	private final float speed;
-	private final int fade;
+	private final int fadeDurationTicks;
 	private final Ease fadeEasing;
-	private final ArrayList<ModelPart> disabledModelParts;
+	private final List<ModelPart> disabledModelParts;
 
 	private KeyframeAnimation animation;
 
-	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade) {
-		this.animation = animation;
-		this.speed = speed;
-		this.fade = fade;
-		this.fadeEasing = Ease.LINEAR;
-		this.disabledModelParts = new ArrayList<>();
-	}
-
-	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, Ease fadeEasing) {
-		this.animation = animation;
-		this.speed = speed;
-		this.fade = fade;
-		this.fadeEasing = fadeEasing;
-		this.disabledModelParts = new ArrayList<>();
-	}
-
-	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, ArrayList<ModelPart> disabledModelParts) {
-		this.animation = animation;
-		this.speed = speed;
-		this.fade = fade;
-		this.fadeEasing = Ease.LINEAR;
-		this.disabledModelParts = disabledModelParts;
-	}
-
-	public AnimationData(@NotNull KeyframeAnimation animation, float speed, int fade, Ease fadeEasing, ArrayList<ModelPart> disabledModelParts) {
-		this.animation = animation;
-		this.speed = speed;
-		this.fade = fade;
-		this.fadeEasing = fadeEasing;
-		this.disabledModelParts = disabledModelParts;
+	public AnimationData(@NotNull Animation animation) {
+		this.animation = AnimationUtil.getAnimation(animation.getSelectedAnimationName());
+		this.speed = animation.getSpeed();
+		this.fadeDurationTicks = animation.getFadeDurationTicks();
+		this.fadeEasing = animation.getFadeEasing();
+		this.disabledModelParts = animation.getDisabledModelParts();
 	}
 
 	public KeyframeAnimation getKeyframeAnimation() {
@@ -73,10 +50,10 @@ public class AnimationData {
 
 		IAnimation animationPlayer = new KeyframeAnimationPlayer(this.animation);
 
-		if (this.fade == 0) {
+		if (this.fadeDurationTicks == 0) {
 			animationContainer.setAnimation(animationPlayer);
 		} else {
-			animationContainer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(fade, fadeEasing), animationPlayer);
+			animationContainer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(fadeDurationTicks, fadeEasing), animationPlayer);
 		}
 	}
 

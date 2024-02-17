@@ -1,44 +1,33 @@
-package com.github.steveplays28.playeranimationrework.animation.check;
+package com.github.steveplays28.playeranimationrework.animation.impl;
 
-import com.github.steveplays28.playeranimationrework.animation.ModelPart;
-import com.github.steveplays28.playeranimationrework.animation.AnimationData;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
-import dev.kosmx.playerAnim.core.util.Ease;
+import com.github.steveplays28.playeranimationrework.animation.ModelPart;
+import com.github.steveplays28.playeranimationrework.animation.Animation;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.sound.SoundCategory;
-
-import java.util.ArrayList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.SLIDE_SOUND_EVENT;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.*;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
 
-public class SprintAnimationCheck implements AnimationCheck {
+public class SprintAnimation extends Animation {
 	private static final String ANIMATION_NAME = "running";
 	private static final String STOP_ANIMATION_NAME = "sprint_stop";
 
-	private final ArrayList<ModelPart> disabledModelParts = new ArrayList<>();
-
-	private boolean shouldPlay = false;
 	private boolean wasPlayerSprintingLastTick = false;
-	private String selectedAnimationName;
-	private int fadeTime = 5;
+	private int fadeDurationTicks;
 
 	@Override
-	public String getSelectedAnimationName() {
-		return selectedAnimationName;
-	}
-
-	@Override
-	public void tick(AbstractClientPlayerEntity player) {
+	public void tick(@NotNull AbstractClientPlayerEntity player) {
 		if (player.isSprinting()) {
-			this.selectedAnimationName = ANIMATION_NAME;
-			this.shouldPlay = true;
+			shouldPlay = true;
 		} else if (wasPlayerSprintingLastTick) {
-			this.selectedAnimationName = STOP_ANIMATION_NAME;
-			this.fadeTime = 2;
-			this.shouldPlay = true;
+			fadeDurationTicks = 2;
+			shouldPlay = true;
 		}
 
 		this.wasPlayerSprintingLastTick = player.isSprinting();
@@ -46,19 +35,18 @@ public class SprintAnimationCheck implements AnimationCheck {
 		if (getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disabledModelParts.add(ModelPart.LEFT_ARM);
-			disabledModelParts.add(ModelPart.RIGHT_ARM);
+			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 		}
 
 		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
 				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disabledModelParts.add(ModelPart.RIGHT_ARM);
+			disableModelParts(ModelPart.RIGHT_ARM);
 		}
 	}
 
 	@Override
-	public void onPlay(AbstractClientPlayerEntity player, String selectedAnimationName) {
+	public void onPlay(@NotNull AbstractClientPlayerEntity player, String selectedAnimationName) {
 		if (!selectedAnimationName.equals(STOP_ANIMATION_NAME)) {
 			return;
 		}
@@ -71,8 +59,19 @@ public class SprintAnimationCheck implements AnimationCheck {
 	}
 
 	@Override
-	public AnimationData getAnimationData() {
-		return new AnimationData(getAnimation(selectedAnimationName), 1f, fadeTime, Ease.INOUTSINE, disabledModelParts);
+	public int getFadeDurationTicks() {
+		return fadeDurationTicks;
+	}
+
+	@Override
+	protected @Nullable String getNewSelectedAnimationName(@NotNull AbstractClientPlayerEntity player) {
+		if (player.isSprinting()) {
+			return ANIMATION_NAME;
+		} else if (wasPlayerSprintingLastTick) {
+			return STOP_ANIMATION_NAME;
+		}
+
+		return null;
 	}
 
 	@Override
@@ -81,15 +80,8 @@ public class SprintAnimationCheck implements AnimationCheck {
 	}
 
 	@Override
-	public boolean getShouldPlay() {
-		return this.shouldPlay;
-	}
-
-	@Override
 	public void cleanup() {
-		this.shouldPlay = false;
-		this.selectedAnimationName = null;
-		this.fadeTime = 5;
-		disabledModelParts.clear();
+		super.cleanup();
+		fadeDurationTicks = super.getFadeDurationTicks();
 	}
 }

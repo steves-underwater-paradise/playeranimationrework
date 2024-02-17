@@ -1,67 +1,52 @@
-package com.github.steveplays28.playeranimationrework.animation.check;
+package com.github.steveplays28.playeranimationrework.animation.impl;
 
-import com.github.steveplays28.playeranimationrework.animation.AnimationData;
+import com.github.steveplays28.playeranimationrework.animation.Animation;
 import com.github.steveplays28.playeranimationrework.animation.AnimationPriority;
 import com.github.steveplays28.playeranimationrework.animation.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.*;
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
 
-public class SwimAnimationCheck implements AnimationCheck {
+public class SwimAnimation extends Animation {
 	private static final String SWIM_ANIMATION_NAME = "swimming";
 	private static final String SWIM_IDLE_ANIMATION_NAME = "swim_idle";
 
-	private final ArrayList<ModelPart> disabledModelParts = new ArrayList<>();
-
-	private boolean shouldPlay = false;
-	private String selectedAnimationName;
-
 	@Override
-	public void tick(AbstractClientPlayerEntity player) {
-		if (player.isInSwimmingPose()) {
+	public void tick(@NotNull AbstractClientPlayerEntity player) {
+		if (player.isInSwimmingPose() || player.isInsideWaterOrBubbleColumn()) {
 			shouldPlay = true;
-			selectedAnimationName = SWIM_ANIMATION_NAME;
-		} else if (player.isInsideWaterOrBubbleColumn()) {
-			shouldPlay = true;
-			selectedAnimationName = SWIM_IDLE_ANIMATION_NAME;
 		}
 
 		if (getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disabledModelParts.add(ModelPart.LEFT_ARM);
-			disabledModelParts.add(ModelPart.RIGHT_ARM);
+			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 		}
 
 		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
 				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disabledModelParts.add(ModelPart.RIGHT_ARM);
+			disableModelParts(ModelPart.RIGHT_ARM);
 		}
 	}
 
 	@Override
-	public AnimationData getAnimationData() {
-		return new AnimationData(getAnimation(selectedAnimationName), 1.0f, 5, disabledModelParts);
+	protected @Nullable String getNewSelectedAnimationName(@NotNull AbstractClientPlayerEntity player) {
+		if (player.isInSwimmingPose()) {
+			return SWIM_ANIMATION_NAME;
+		} else if (player.isInsideWaterOrBubbleColumn()) {
+			return SWIM_IDLE_ANIMATION_NAME;
+		}
+
+		return null;
 	}
 
 	@Override
 	public AnimationPriority getPriority() {
 		return AnimationPriority.SWIM;
-	}
-
-	@Override
-	public boolean getShouldPlay() {
-		return this.shouldPlay;
-	}
-
-	@Override
-	public void cleanup() {
-		shouldPlay = false;
-		disabledModelParts.clear();
 	}
 }
