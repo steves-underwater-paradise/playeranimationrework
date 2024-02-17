@@ -43,7 +43,7 @@ public class PunchAnimation extends Animation {
 	}
 
 	@Override
-	public String getSelectedAnimationName() {
+	public @Nullable String getSelectedAnimationName() {
 		return selectedAnimationName;
 	}
 

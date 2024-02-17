@@ -18,6 +18,7 @@ public class SwimAnimation extends Animation {
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
 		if (player.isInSwimmingPose() || player.isInsideWaterOrBubbleColumn()) {
+			super.tick(player);
 			shouldPlay = true;
 		}
 

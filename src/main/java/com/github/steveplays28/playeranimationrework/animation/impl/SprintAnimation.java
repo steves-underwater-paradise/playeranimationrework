@@ -23,26 +23,28 @@ public class SprintAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		if (player.isSprinting()) {
+		if (player.isSprinting() || wasPlayerSprintingLastTick) {
+			super.tick(player);
 			shouldPlay = true;
-		} else if (wasPlayerSprintingLastTick) {
+
+			if (getItemsWithThirdPersonArmAnimations().contains(player.getEquippedStack(
+					EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
+					player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+				disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
+			}
+
+			if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
+					EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+					player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+				disableModelParts(ModelPart.RIGHT_ARM);
+			}
+		}
+
+		if (wasPlayerSprintingLastTick) {
 			fadeDurationTicks = 2;
-			shouldPlay = true;
 		}
 
 		this.wasPlayerSprintingLastTick = player.isSprinting();
-
-		if (getItemsWithThirdPersonArmAnimations().contains(
-				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
-				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
-		}
-
-		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
-				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
-			disableModelParts(ModelPart.RIGHT_ARM);
-		}
 	}
 
 	@Override

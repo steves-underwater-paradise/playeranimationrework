@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ShieldItem;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -21,11 +22,15 @@ public class AnimationUtil {
 		return new Identifier(String.format("%s", MOD_NAMESPACE), animationName);
 	}
 
-	public static @NotNull KeyframeAnimation getAnimation(String animationName) {
-		var keyframeAnimation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(animationName));
+	public static @NotNull KeyframeAnimation getAnimation(@Nullable String animationName) {
+		if (animationName == null) {
+			throw new IllegalStateException("Tried playing animation, but animationName was null.");
+		}
 
+		var keyframeAnimation = PlayerAnimationRegistry.getAnimation(getAnimationIdentifier(animationName));
 		if (keyframeAnimation == null) {
-			throw new IllegalStateException(String.format("Animation %s is null.", animationName));
+			throw new IllegalStateException(
+					String.format("Tried playing animation with name %s, but keyframeAnimation was null.", animationName));
 		}
 
 		return keyframeAnimation;

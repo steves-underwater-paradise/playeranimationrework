@@ -20,14 +20,13 @@ public class FenceWalkAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		super.tick(player);
-
 		Block standingBlock = player.getWorld().getBlockState(player.getBlockPos().down()).getBlock();
 		boolean onThinBlock = (standingBlock instanceof FenceBlock || standingBlock instanceof WallBlock || standingBlock instanceof PaneBlock) && player.isOnGround();
 		if (!onThinBlock) {
 			return;
 		}
 
+		super.tick(player);
 		this.shouldPlay = true;
 
 		if (getItemsWithThirdPersonArmAnimations().contains(

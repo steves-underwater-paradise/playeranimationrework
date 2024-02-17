@@ -17,9 +17,8 @@ public class FallAnimation extends Animation {
 
 	@Override
 	public void fall(@NotNull AbstractClientPlayerEntity player, double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {
-		super.tick(player);
-
 		if ((lastFallDistance > 3 && onGround) || player.fallDistance > 3 || !onGround) {
+			super.tick(player);
 			shouldPlay = true;
 		}
 

@@ -12,12 +12,11 @@ public class FlintAndSteelAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		super.tick(player);
-
 		if (!player.isUsingItem() || !(player.getActiveItem().getItem() instanceof FlintAndSteelItem)) {
 			return;
 		}
 
+		super.tick(player);
 		shouldPlay = true;
 	}
 

@@ -10,7 +10,12 @@ public class EatingAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		shouldPlay = player.isUsingItem() && player.getActiveItem().getItem().isFood();
+		if (!(player.isUsingItem() && player.getActiveItem().getItem().isFood())) {
+			return;
+		}
+
+		super.tick(player);
+		shouldPlay = true;
 	}
 
 	@Override

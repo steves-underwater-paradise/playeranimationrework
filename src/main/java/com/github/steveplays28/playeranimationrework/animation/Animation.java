@@ -17,6 +17,7 @@ public abstract class Animation {
 
 	private final List<ModelPart> disabledModelParts = new ArrayList<>();
 
+	@Nullable
 	private String selectedAnimationName;
 
 	public abstract AnimationPriority getPriority();
@@ -43,7 +44,7 @@ public abstract class Animation {
 		return shouldPlay;
 	}
 
-	public String getSelectedAnimationName() {
+	public @Nullable String getSelectedAnimationName() {
 		return selectedAnimationName;
 	}
 

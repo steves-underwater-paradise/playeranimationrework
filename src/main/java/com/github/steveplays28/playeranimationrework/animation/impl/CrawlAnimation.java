@@ -15,12 +15,11 @@ public class CrawlAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		super.tick(player);
-
 		if (!player.isCrawling()) {
 			return;
 		}
 
+		super.tick(player);
 		this.shouldPlay = true;
 
 		if (getItemsWithThirdPersonArmAnimations().contains(

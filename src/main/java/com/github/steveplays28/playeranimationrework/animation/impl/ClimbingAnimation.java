@@ -16,12 +16,11 @@ public class ClimbingAnimation extends Animation {
 
 	@Override
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
-		super.tick(player);
-
 		if (!player.isClimbing()) {
 			return;
 		}
 
+		super.tick(player);
 		this.shouldPlay = true;
 
 		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(

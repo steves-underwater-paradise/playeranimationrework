@@ -12,6 +12,8 @@ public class EdgeStandingAnimation extends Animation {
 	@Override
 	@SuppressWarnings("deprecation")
 	public void tick(@NotNull AbstractClientPlayerEntity player) {
+		super.tick(player);
+
 		boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 		BlockState standingBlockState = player.getWorld().getBlockState(player.getBlockPos().down());
 
