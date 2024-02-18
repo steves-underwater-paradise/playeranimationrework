@@ -40,7 +40,7 @@ public class AnimationUtil {
 		return List.of(CrossbowItem.class, BowItem.class);
 	}
 
-	public static @NotNull List<Class<? extends Item>> getItemsWithThirdPersonRightArmAnimations() {
+	public static @NotNull List<Class<? extends Item>> getItemsWithThirdPersonSingleArmAnimation() {
 		return List.of(ShieldItem.class);
 	}
 }
