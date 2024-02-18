@@ -49,6 +49,10 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (!this.isPartOfGame()) {
+			return;
+		}
+
 		animationRegistry.invokeTick((AbstractClientPlayerEntity) (Object) this);
 
 		Animation animation = animationRegistry.getMostSuitableAnimation();
@@ -69,18 +73,30 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 	@Override
 	public void fall(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition) {
 		super.fall(heightDifference, onGround, state, landedPosition);
+		if (!this.isPartOfGame()) {
+			return;
+		}
+
 		animationRegistry.invokeFall((AbstractClientPlayerEntity) (Object) this, heightDifference, onGround, state, landedPosition);
 	}
 
 	@Override
 	public void jump() {
 		super.jump();
+		if (!this.isPartOfGame()) {
+			return;
+		}
+
 		animationRegistry.invokeJump((AbstractClientPlayerEntity) (Object) this);
 	}
 
 	@Override
 	public void swingHand(Hand hand) {
 		super.swingHand(hand);
+		if (!this.isPartOfGame()) {
+			return;
+		}
+
 		animationRegistry.invokeSwingHand((AbstractClientPlayerEntity) (Object) this, hand);
 	}
 }

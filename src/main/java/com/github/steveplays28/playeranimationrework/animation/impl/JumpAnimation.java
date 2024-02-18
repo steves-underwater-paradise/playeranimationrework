@@ -17,6 +17,7 @@ public class JumpAnimation extends Animation {
 
 	@Override
 	public void jump(@NotNull AbstractClientPlayerEntity player) {
+		// TODO: Keep playing jump animation for N ticks after jumping
 		this.shouldPlay = true;
 
 		if (getItemsWithThirdPersonArmAnimations().contains(
