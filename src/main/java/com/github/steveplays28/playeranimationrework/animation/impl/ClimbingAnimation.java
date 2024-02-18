@@ -8,7 +8,7 @@ import net.minecraft.entity.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonSingleArmAnimation;
 
 public class ClimbingAnimation extends Animation {
 	private static final String IDLE_ANIMATION_NAME = "climbing_idle";
@@ -23,8 +23,8 @@ public class ClimbingAnimation extends Animation {
 		super.tick(player);
 		this.shouldPlay = true;
 
-		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+		if (getItemsWithThirdPersonSingleArmAnimation().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonSingleArmAnimation().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonArmAnimations().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {

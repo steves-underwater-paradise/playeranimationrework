@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonSingleArmAnimation;
 
 public class WalkAnimation extends Animation {
 	private static final String IDLE_ANIMATION_NAME = "idle";
@@ -26,10 +26,11 @@ public class WalkAnimation extends Animation {
 			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 		}
 
-		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
-				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+		if (getItemsWithThirdPersonSingleArmAnimation().contains(player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass())) {
 			disableModelParts(ModelPart.RIGHT_ARM);
+		} else if (getItemsWithThirdPersonSingleArmAnimation().contains(
+				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			disableModelParts(ModelPart.LEFT_ARM);
 		}
 	}
 

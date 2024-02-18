@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.SLIDE_SOUND_EVENT;
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonSingleArmAnimation;
 
 public class SprintAnimation extends Animation {
 	private static final String ANIMATION_NAME = "running";
@@ -33,10 +33,12 @@ public class SprintAnimation extends Animation {
 				disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 			}
 
-			if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-					EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
-					player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+			if (getItemsWithThirdPersonSingleArmAnimation().contains(
+					player.getEquippedStack(EquipmentSlot.MAINHAND).getItem().getClass())) {
 				disableModelParts(ModelPart.RIGHT_ARM);
+			} else if (getItemsWithThirdPersonSingleArmAnimation().contains(
+					player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
+				disableModelParts(ModelPart.LEFT_ARM);
 			}
 		}
 

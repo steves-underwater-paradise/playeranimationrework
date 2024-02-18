@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient.RANDOM;
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonSingleArmAnimation;
 
 public class JumpAnimation extends Animation {
 	private static final String[] ANIMATION_NAMES = new String[]{"jump"};
@@ -26,8 +26,8 @@ public class JumpAnimation extends Animation {
 			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 		}
 
-		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+		if (getItemsWithThirdPersonSingleArmAnimation().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonSingleArmAnimation().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
 			disableModelParts(ModelPart.RIGHT_ARM);
 		}

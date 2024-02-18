@@ -18,12 +18,17 @@ public class SneakAnimation extends Animation {
 			return;
 		}
 
+		super.tick(player);
 		this.shouldPlay = true;
 		this.lastBodyYaw = player.getBodyYaw();
 	}
 
 	@Override
 	protected String getNewSelectedAnimationName(@NotNull AbstractClientPlayerEntity player) {
+		if (!player.isInSneakingPose()) {
+			return null;
+		}
+
 		boolean isMoving = Math.abs(player.getX() - player.prevX) > 0 || Math.abs(player.getZ() - player.prevZ) > 0;
 		float bodyYawDelta = player.getBodyYaw() - this.lastBodyYaw;
 

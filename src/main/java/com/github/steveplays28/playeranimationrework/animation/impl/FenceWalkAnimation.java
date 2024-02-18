@@ -12,7 +12,7 @@ import net.minecraft.entity.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
 
 import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonArmAnimations;
-import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonRightArmAnimations;
+import static com.github.steveplays28.playeranimationrework.client.util.AnimationUtil.getItemsWithThirdPersonSingleArmAnimation;
 
 public class FenceWalkAnimation extends Animation {
 	private static final String IDLE_ANIMATION_NAME = "fence_idle";
@@ -35,8 +35,8 @@ public class FenceWalkAnimation extends Animation {
 			disableModelParts(ModelPart.LEFT_ARM, ModelPart.RIGHT_ARM);
 		}
 
-		if (getItemsWithThirdPersonRightArmAnimations().contains(player.getEquippedStack(
-				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonRightArmAnimations().contains(
+		if (getItemsWithThirdPersonSingleArmAnimation().contains(player.getEquippedStack(
+				EquipmentSlot.MAINHAND).getItem().getClass()) || getItemsWithThirdPersonSingleArmAnimation().contains(
 				player.getEquippedStack(EquipmentSlot.OFFHAND).getItem().getClass())) {
 			disableModelParts(ModelPart.RIGHT_ARM);
 		}
