@@ -33,14 +33,15 @@ public class WalkAnimation implements IAnimation {
 		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
 				AbstractFadeModifier.standardFadeIn(40, Ease.OUTSINE),
 				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(
-						new Identifier(PlayerAnimationReworkClient.MOD_NAMESPACE, WALK_ANIMATION_NAME)))
+						new Identifier(PlayerAnimationReworkClient.MOD_NAMESPACE, WALK_ANIMATION_NAME))),
+				true
 		);
 	}
 
 	@Override
 	public void stop(PlayerEntity player) {
 		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
-				AbstractFadeModifier.standardFadeIn(20, Ease.OUTSINE), null);
+				AbstractFadeModifier.standardFadeIn(10, Ease.OUTSINE), null);
 	}
 
 	@Override
