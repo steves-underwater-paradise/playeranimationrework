@@ -16,7 +16,8 @@ public enum AnimationPriority {
 	ELYTRA(13),
 	PUNCH(14),
 	EATING(15),
-	FLINT_AND_STEEL(16);
+	FLINT_AND_STEEL(16),
+	WORKBENCH_USE(17);
 
 	private final int value;
 

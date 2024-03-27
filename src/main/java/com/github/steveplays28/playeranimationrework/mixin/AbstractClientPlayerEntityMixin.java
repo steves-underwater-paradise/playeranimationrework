@@ -40,9 +40,9 @@ public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
 
 		// TODO: Refactor into an API
 		animationRegistry.registerAnimations(new BoatAnimation(), new ClimbingAnimation(), new CrawlAnimation(), new EatingAnimation(),
-				new EdgeStandingAnimation(), new ElytraAnimation(), new FallAnimation(), new FenceWalkAnimation(),
+				new BalanceLossAnimation(), new ElytraAnimation(), new FallAnimation(), new FenceWalkAnimation(),
 				new FlintAndSteelAnimation(), new JumpAnimation(), new PunchAnimation(), new SneakAnimation(), new SprintAnimation(),
-				new SwimAnimation(), new TurnAnimation(), new WalkAnimation()
+				new SwimAnimation(), new TurnAnimation(), new WalkAnimation(), new WorkbenchUseAnimation()
 		);
 	}
 
