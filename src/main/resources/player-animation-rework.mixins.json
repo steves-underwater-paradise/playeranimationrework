@@ -7,6 +7,7 @@
   ],
   "client": [
     "AbstractClientPlayerEntityMixin",
+    "PlayerEntityMixin",
     "PlayerEntityRendererMixin"
   ],
   "injectors": {

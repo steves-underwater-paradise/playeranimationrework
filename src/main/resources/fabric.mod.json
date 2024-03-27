@@ -11,7 +11,7 @@
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/playeranimationrework/icon.png",
+  "icon": "assets/player_animation_rework/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
@@ -19,7 +19,7 @@
     ]
   },
   "mixins": [
-    "playeranimationrework.mixin.json"
+    "player-animation-rework.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.14.21",
