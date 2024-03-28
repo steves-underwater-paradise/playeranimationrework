@@ -3,13 +3,12 @@ package com.github.steveplays28.playeranimationrework.client.animation.impl;
 import com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient;
 import com.github.steveplays28.playeranimationrework.client.animation.IAnimation;
 import com.github.steveplays28.playeranimationrework.client.animation.state.PARState;
-import com.github.steveplays28.playeranimationrework.client.event.animation.state.PARPlayerStateChangeCallback;
-import com.github.steveplays28.playeranimationrework.client.extension.PlayerEntityExtension;
+import com.github.steveplays28.playeranimationrework.client.event.animation.state.PARPlayerStateChangeEvents;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,7 @@ public class SprintAnimation implements IAnimation {
 
 	@Override
 	public IAnimation register() {
-		PARPlayerStateChangeCallback.EVENT.register(this::onStateChanged);
+		PARPlayerStateChangeEvents.PLAYER_STATE_CHANGED.register(this::onPlayerStateChanged);
 		return this;
 	}
 
@@ -29,16 +28,16 @@ public class SprintAnimation implements IAnimation {
 	}
 
 	@Override
-	public void start(PlayerEntity player) {
-		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
+	public void start(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer) {
+		playerAnimationModifierLayer.replaceAnimationWithFade(
 				AbstractFadeModifier.standardFadeIn(40, Ease.OUTSINE),
 				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(SPRINTING_ANIMATION_IDENTIFIER)), true
 		);
 	}
 
 	@Override
-	public void stop(PlayerEntity player) {
-		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
+	public void stop(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer) {
+		playerAnimationModifierLayer.replaceAnimationWithFade(
 				AbstractFadeModifier.standardFadeIn(10, Ease.OUTSINE), null);
 	}
 
@@ -47,13 +46,13 @@ public class SprintAnimation implements IAnimation {
 		// TODO
 	}
 
-	private void onStateChanged(PlayerEntity player, @NotNull PARState previousState, @NotNull PARState newState) {
+	private void onPlayerStateChanged(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState) {
 		if (previousState.isSprinting() && newState.isSprinting()) {
 			return;
 		}
 
 		if (!previousState.isSprinting() && newState.isSprinting()) {
-			start(player);
+			start(playerAnimationModifierLayer);
 		}
 	}
 }

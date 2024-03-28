@@ -14,6 +14,7 @@ public class PARStateBuilder {
 	public PARStateBuilder(@NotNull PARState state) {
 		this.isWalking = state.isWalking();
 		this.isSprinting = state.isSprinting();
+		this.isSneaking = state.isSneaking();
 	}
 
 	public PARStateBuilder setIsWalking(boolean isWalking) {

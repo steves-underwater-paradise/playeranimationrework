@@ -37,7 +37,6 @@ public class PlayerAnimationReworkClient implements ClientModInitializer {
 		animations.add(new IdleAnimation().register());
 		animations.add(new WalkAnimation().register());
 		animations.add(new SprintAnimation().register());
-		animations.add(new SneakAnimation().register());
 
 		// Register sound events
 		Registry.register(Registries.SOUND_EVENT, SLIDE_SOUND_EVENT_ID, SLIDE_SOUND_EVENT);
