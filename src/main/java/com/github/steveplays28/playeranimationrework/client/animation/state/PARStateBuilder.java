@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public class PARStateBuilder {
 	private boolean isWalking;
 	private boolean isSprinting;
+	private boolean isSneaking;
 
 	public PARStateBuilder() {
 		// NO-OP
@@ -25,7 +26,12 @@ public class PARStateBuilder {
 		return this;
 	}
 
+	public PARStateBuilder setIsSneaking(boolean isSneaking) {
+		this.isSneaking = isSneaking;
+		return this;
+	}
+
 	public PARState build() {
-		return new PARState(isWalking, isSprinting);
+		return new PARState(isWalking, isSprinting, isSneaking);
 	}
 }

@@ -13,9 +13,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class WalkAnimation implements IAnimation {
-	private static final String IDLE_ANIMATION_NAME = "idle";
-	private static final String WALK_ANIMATION_NAME = "walking";
+public class SprintAnimation implements IAnimation {
+	// TODO: Fix inconsistent naming
+	private static final Identifier SPRINTING_ANIMATION_IDENTIFIER = new Identifier(PlayerAnimationReworkClient.MOD_NAMESPACE, "running");
 
 	@Override
 	public IAnimation register() {
@@ -32,9 +32,7 @@ public class WalkAnimation implements IAnimation {
 	public void start(PlayerEntity player) {
 		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
 				AbstractFadeModifier.standardFadeIn(40, Ease.OUTSINE),
-				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(
-						new Identifier(PlayerAnimationReworkClient.MOD_NAMESPACE, WALK_ANIMATION_NAME))),
-				true
+				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(SPRINTING_ANIMATION_IDENTIFIER)), true
 		);
 	}
 
@@ -50,11 +48,11 @@ public class WalkAnimation implements IAnimation {
 	}
 
 	private void onStateChanged(PlayerEntity player, @NotNull PARState previousState, @NotNull PARState newState) {
-		if (previousState.isWalking() && newState.isWalking()) {
+		if (previousState.isSprinting() && newState.isSprinting()) {
 			return;
 		}
 
-		if (!previousState.isWalking() && newState.isWalking()) {
+		if (!previousState.isSprinting() && newState.isSprinting()) {
 			start(player);
 		}
 	}

@@ -1,7 +1,7 @@
 package com.github.steveplays28.playeranimationrework.client;
 
 import com.github.steveplays28.playeranimationrework.client.animation.IAnimation;
-import com.github.steveplays28.playeranimationrework.client.animation.impl.WalkAnimation;
+import com.github.steveplays28.playeranimationrework.client.animation.impl.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,7 +34,10 @@ public class PlayerAnimationReworkClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		LOGGER.info("Loading {}.", MOD_NAME);
 
+		animations.add(new IdleAnimation().register());
 		animations.add(new WalkAnimation().register());
+		animations.add(new SprintAnimation().register());
+		animations.add(new SneakAnimation().register());
 
 		// Register sound events
 		Registry.register(Registries.SOUND_EVENT, SLIDE_SOUND_EVENT_ID, SLIDE_SOUND_EVENT);

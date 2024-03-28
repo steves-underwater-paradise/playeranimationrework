@@ -6,6 +6,7 @@ import com.github.steveplays28.playeranimationrework.client.animation.state.PARS
 import com.github.steveplays28.playeranimationrework.client.event.animation.state.PARPlayerStateChangeCallback;
 import com.github.steveplays28.playeranimationrework.client.extension.PlayerEntityExtension;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -13,9 +14,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public class WalkAnimation implements IAnimation {
-	private static final String IDLE_ANIMATION_NAME = "idle";
-	private static final String WALK_ANIMATION_NAME = "walking";
+public class IdleAnimation implements IAnimation {
+	// TODO: Fix naming inconsistency
+	private static final Identifier STANDING_IDLE_ANIMATION_IDENTIFIER = new Identifier(
+			PlayerAnimationReworkClient.MOD_NAMESPACE, "idle");
+	// TODO: Fix naming inconsistency
+	private static final Identifier SNEAK_IDLE_ANIMATION_IDENTIFIER = new Identifier(
+			PlayerAnimationReworkClient.MOD_NAMESPACE, "sneak_idle");
 
 	@Override
 	public IAnimation register() {
@@ -31,17 +36,15 @@ public class WalkAnimation implements IAnimation {
 	@Override
 	public void start(PlayerEntity player) {
 		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
-				AbstractFadeModifier.standardFadeIn(40, Ease.OUTSINE),
-				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(
-						new Identifier(PlayerAnimationReworkClient.MOD_NAMESPACE, WALK_ANIMATION_NAME))),
-				true
+				AbstractFadeModifier.standardFadeIn(60, Ease.OUTSINE),
+				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(STANDING_IDLE_ANIMATION_IDENTIFIER)), true
 		);
 	}
 
 	@Override
 	public void stop(PlayerEntity player) {
 		((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer().replaceAnimationWithFade(
-				AbstractFadeModifier.standardFadeIn(10, Ease.OUTSINE), null);
+				AbstractFadeModifier.standardFadeIn(40, Ease.OUTSINE), null);
 	}
 
 	@Override
@@ -50,12 +53,20 @@ public class WalkAnimation implements IAnimation {
 	}
 
 	private void onStateChanged(PlayerEntity player, @NotNull PARState previousState, @NotNull PARState newState) {
-		if (previousState.isWalking() && newState.isWalking()) {
-			return;
-		}
+		if (previousState.isWalking() && !newState.isWalking()) {
+			if (newState.isSneaking()) {
+				startSneakingIdleAnimation(((PlayerEntityExtension) player).playerAnimationRework$getModifierLayer());
+				return;
+			}
 
-		if (!previousState.isWalking() && newState.isWalking()) {
 			start(player);
 		}
+	}
+
+	private void startSneakingIdleAnimation(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer) {
+		playerAnimationModifierLayer.replaceAnimationWithFade(
+				AbstractFadeModifier.standardFadeIn(60, Ease.OUTSINE),
+				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(SNEAK_IDLE_ANIMATION_IDENTIFIER)), true
+		);
 	}
 }
