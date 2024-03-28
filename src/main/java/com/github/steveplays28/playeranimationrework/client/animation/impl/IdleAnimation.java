@@ -35,10 +35,7 @@ public class IdleAnimation implements IAnimation {
 
 	@Override
 	public void start(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer) {
-		playerAnimationModifierLayer.replaceAnimationWithFade(
-				AbstractFadeModifier.standardFadeIn(60, Ease.OUTSINE),
-				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(IDLE_STANDING_ANIMATION_IDENTIFIER)), true
-		);
+		// NO-OP
 	}
 
 	@Override
@@ -54,7 +51,7 @@ public class IdleAnimation implements IAnimation {
 
 	private void onPlayerStateChanged(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState) {
 		if (previousState.isWalking() && !newState.isWalking()) {
-			start(playerAnimationModifierLayer);
+			startStandingIdleAnimation(playerAnimationModifierLayer, 10);
 		}
 	}
 
@@ -66,8 +63,15 @@ public class IdleAnimation implements IAnimation {
 
 	private void onPlayerUnsneak(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState) {
 		if (!newState.isWalking()) {
-			start(playerAnimationModifierLayer);
+			startStandingIdleAnimation(playerAnimationModifierLayer, 60);
 		}
+	}
+
+	private void startStandingIdleAnimation(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, int fadeLength) {
+		playerAnimationModifierLayer.replaceAnimationWithFade(
+				AbstractFadeModifier.standardFadeIn(fadeLength, Ease.OUTSINE),
+				new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(IDLE_STANDING_ANIMATION_IDENTIFIER)), true
+		);
 	}
 
 	private void startSneakingIdleAnimation(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer) {
