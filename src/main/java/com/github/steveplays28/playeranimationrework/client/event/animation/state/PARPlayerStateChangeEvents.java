@@ -44,6 +44,42 @@ public final class PARPlayerStateChangeEvents {
 			}
 	);
 
+	public static final Event<PlayerEquipMainHandItemStack> PLAYER_EQUIP_MAIN_HAND_ITEM_STACK = EventFactory.createArrayBacked(
+			PlayerEquipMainHandItemStack.class,
+			(listeners) -> (playerAnimationModifierLayer, previousState, newState) -> {
+				for (PlayerEquipMainHandItemStack listener : listeners) {
+					listener.onPlayerEquippedMainHandItemStack(playerAnimationModifierLayer, previousState, newState);
+				}
+			}
+	);
+
+	public static final Event<PlayerEquipOffHandItemStack> PLAYER_EQUIP_OFF_HAND_ITEM_STACK = EventFactory.createArrayBacked(
+			PlayerEquipOffHandItemStack.class,
+			(listeners) -> (playerAnimationModifierLayer, previousState, newState) -> {
+				for (PlayerEquipOffHandItemStack listener : listeners) {
+					listener.onPlayerEquippedOffHandItemStack(playerAnimationModifierLayer, previousState, newState);
+				}
+			}
+	);
+
+	public static final Event<PlayerUnequipMainHandItemStack> PLAYER_UNEQUIP_MAIN_HAND_ITEM_STACK = EventFactory.createArrayBacked(
+			PlayerUnequipMainHandItemStack.class,
+			(listeners) -> (playerAnimationModifierLayer, previousState, newState) -> {
+				for (PlayerUnequipMainHandItemStack listener : listeners) {
+					listener.onPlayerUnequippedMainHandItemStack(playerAnimationModifierLayer, previousState, newState);
+				}
+			}
+	);
+
+	public static final Event<PlayerUnequipOffHandItemStack> PLAYER_UNEQUIP_OFF_HAND_ITEM_STACK = EventFactory.createArrayBacked(
+			PlayerUnequipOffHandItemStack.class,
+			(listeners) -> (playerAnimationModifierLayer, previousState, newState) -> {
+				for (PlayerUnequipOffHandItemStack listener : listeners) {
+					listener.onPlayerUnequippedOffHandItemStack(playerAnimationModifierLayer, previousState, newState);
+				}
+			}
+	);
+
 	@FunctionalInterface
 	public interface PlayerStateChange {
 		void onPlayerStateChanged(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
@@ -62,5 +98,25 @@ public final class PARPlayerStateChangeEvents {
 	@FunctionalInterface
 	public interface PlayerUnsneak {
 		void onPlayerUnsneak(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
+	}
+
+	@FunctionalInterface
+	public interface PlayerEquipMainHandItemStack {
+		void onPlayerEquippedMainHandItemStack(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
+	}
+
+	@FunctionalInterface
+	public interface PlayerEquipOffHandItemStack {
+		void onPlayerEquippedOffHandItemStack(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
+	}
+
+	@FunctionalInterface
+	public interface PlayerUnequipMainHandItemStack {
+		void onPlayerUnequippedMainHandItemStack(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
+	}
+
+	@FunctionalInterface
+	public interface PlayerUnequipOffHandItemStack {
+		void onPlayerUnequippedOffHandItemStack(ModifierLayer<IAnimation> playerAnimationModifierLayer, @NotNull PARState previousState, @NotNull PARState newState);
 	}
 }

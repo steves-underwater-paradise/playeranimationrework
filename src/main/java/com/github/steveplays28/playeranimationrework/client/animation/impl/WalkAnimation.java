@@ -2,15 +2,19 @@ package com.github.steveplays28.playeranimationrework.client.animation.impl;
 
 import com.github.steveplays28.playeranimationrework.client.PlayerAnimationReworkClient;
 import com.github.steveplays28.playeranimationrework.client.animation.IAnimation;
+import com.github.steveplays28.playeranimationrework.client.animation.ModelPart;
 import com.github.steveplays28.playeranimationrework.client.animation.state.PARState;
 import com.github.steveplays28.playeranimationrework.client.event.animation.state.PARPlayerStateChangeEvents;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class WalkAnimation implements IAnimation {
 	private static final String WALKING_ANIMATION_NAME = "walking";
@@ -43,7 +47,12 @@ public class WalkAnimation implements IAnimation {
 	}
 
 	@Override
-	public void continueWithSpecificBodyParts() {
+	public void continueWithSpecificBodyPartsEnabled(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, @NotNull KeyframeAnimation animation, @NotNull List<ModelPart> unanimatedBodyParts) {
+		// TODO
+	}
+
+	@Override
+	public void continueWithSpecificBodyPartsDisabled(@NotNull ModifierLayer<dev.kosmx.playerAnim.api.layered.IAnimation> playerAnimationModifierLayer, @NotNull KeyframeAnimation animation, @NotNull List<ModelPart> unanimatedBodyParts) {
 		// TODO
 	}
 

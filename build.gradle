@@ -64,6 +64,9 @@ dependencies {
 
     // Real Camera (runtime)
     modRuntimeOnly("maven.modrinth:real-camera:${project.real_camera_version}")
+
+    // Not Enough Animations (runtime)
+    modRuntimeOnly("maven.modrinth:not-enough-animations:${project.not_enough_animations_version}")
 }
 
 processResources {

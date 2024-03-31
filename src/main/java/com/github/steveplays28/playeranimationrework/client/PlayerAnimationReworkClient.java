@@ -5,6 +5,7 @@ import com.github.steveplays28.playeranimationrework.client.animation.impl.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
@@ -23,6 +24,7 @@ public class PlayerAnimationReworkClient implements ClientModInitializer {
 	public static final String MOD_NAME = "Player Animation Rework";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final String REAL_CAMERA_MOD_ID = "realcamera";
+	public static final boolean IS_NOT_ENOUGH_ANIMATIONS_LOADED = FabricLoader.getInstance().isModLoaded("notenoughanimations");
 	public static final Random RANDOM = new Random();
 	// Sound events
 	public static final Identifier SLIDE_SOUND_EVENT_ID = new Identifier(MOD_NAMESPACE, "player.slide");
