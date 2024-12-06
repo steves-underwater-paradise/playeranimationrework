@@ -1,0 +1,34 @@
+{
+	// Required - Special value: playeranimationrework:none (requires while trigger and loop to be true)
+	"identifier": "namespace:animation_identifier",
+	// Required
+	"trigger": {
+		// Required - single value || array - when || while || after (other animation)
+		"while": "namespace:trigger",
+		// true || false
+		"loop": true
+	},
+	"interpolation": {
+		"type": "ease_in_out",
+		// Length of the in interpolation in seconds
+		"length_in": 0.1,
+		// Length of the out interpolation in seconds
+		"length_out": 1
+	},
+	// Priority values per limb, from high priority (0) to low priority (MAX_INT)
+	// Objects can either have values or expand into multiple sub-objects
+	// Animations with lower priorities can get canceled by higher priority animations
+	"priority": {
+		// Maybe don't allow the head to be animated to prevent camera issues
+		"head": 1000,
+		"torso": 1000,
+		"arms": {
+			"right_arm": 1000,
+			"left_arm": 1000
+		},
+		"legs": {
+			"right_leg": 1000,
+			"left_leg": 1000
+		}
+	}
+}
