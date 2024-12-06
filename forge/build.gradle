@@ -1,0 +1,34 @@
+//file:noinspection GroovyAccessibility
+//file:noinspection GroovyAssignabilityCheck
+//file:noinspection DependencyNotationArgument
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
+        mixinConfig "${mod_id}-common.mixins.json"
+    }
+}
+
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
+dependencies {
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    // (Neo)Forge
+    forge "net.neoforged:forge:${rootProject.minecraft_version}-${rootProject.neoforge_version}"
+
+    // Architectury API
+    modRuntimeOnly("dev.architectury:architectury-forge:${rootProject.architectury_api_version}")
+}

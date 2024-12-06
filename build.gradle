@@ -1,109 +1,142 @@
 //file:noinspection GroovyAccessibility
 //file:noinspection GroovyAssignabilityCheck
+//file:noinspection DependencyNotationArgument
 
-plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'maven-publish'
+apply plugin: "architectury-plugin"
+
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-version = "${project.mod_version}+mc${project.supported_minecraft_version}"
-group = project.maven_group
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "maven-publish"
 
-repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
+    base {
+        archivesName = "${rootProject.mod_id}-${project.getName()}"
+    }
 
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
+    repositories {
+        maven {
+            name = "Modrinth"
+            url = "https://api.modrinth.com/maven"
+            content {
+                includeGroup "maven.modrinth"
+            }
         }
     }
 
-    maven {
-        name = "Shedaniel Maven"
-        url = "https://maven.shedaniel.me/"
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     }
 
-    maven {
-        name = "TerraformersMC"
-        url = "https://maven.terraformersmc.com/"
+    processResources {
+        inputs.property "version", project.version
+
+        from(project(":common").sourceSets["main"].resources) {
+            include("assets", "data", "resourcepacks")
+        }
+
+        filesMatching(["fabric.mod.json", "mods.toml"]) {
+            expand "version": project.version,
+                    "mod_id": rootProject.mod_id,
+                    "mod_name": rootProject.mod_name,
+                    "mod_description": rootProject.mod_description,
+                    "mod_license": rootProject.mod_license,
+                    "git_repository_host": rootProject.git_repository_host,
+                    "git_organization": rootProject.git_organization,
+                    "curseforge_project_id": rootProject.curseforge_project_id,
+                    "modrinth_project_id": rootProject.modrinth_project_id,
+                    "supported_minecraft_version": rootProject.supported_minecraft_version,
+                    "fabric_loader_version": rootProject.fabric_loader_version,
+                    "forge_version": rootProject.neoforge_version,
+                    "fabric_api_version": rootProject.fabric_api_version,
+                    "architectury_api_version": rootProject.architectury_api_version
+        }
     }
 
-    maven {
-        name = "KosmX's maven"
-        url = "https://maven.kosmx.dev"
+    java {
+        withSourcesJar()
+    }
+
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${rootProject.mod_id}" }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenCommon(MavenPublication) {
+                groupId = rootProject.maven_group
+                artifactId = base.getArchivesName()
+                from components.java
+            }
+        }
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("${rootProject.maven_repository}/${rootProject.mod_id}")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+    }
+
+    // Clean the previous build output of the root project and all subprojects before building
+    tasks.named("build") {
+        dependsOn(clean, subprojects.clean)
+    }
+
+    if (!project.getName().contains("common")) {
+        configurations {
+            common
+            shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files
+            compileClasspath.extendsFrom common
+            runtimeClasspath.extendsFrom common
+            developmentFabric.extendsFrom common
+        }
+
+        shadowJar {
+            exclude "fabric.mod.json"
+            exclude "architectury.common.json"
+
+            configurations = [project.configurations.shadowCommon]
+            archiveClassifier = "dev-shadow"
+        }
+
+        remapJar {
+            inputFile.set shadowJar.archiveFile
+            dependsOn shadowJar
+        }
+
+        sourcesJar {
+            def commonSources = project(":common").sourcesJar
+            dependsOn commonSources
+            from commonSources.archiveFile.map { zipTree(it) }
+        }
+
+        components.java {
+            withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+                skip()
+            }
+        }
     }
 }
 
-dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+allprojects {
+    apply plugin: "architectury-plugin"
 
-    // Fabric API
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    version = "${rootProject.mod_version}+mc${rootProject.supported_minecraft_version_name}"
+    group = rootProject.maven_group
 
-    // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
-    // PlayerAnimator (JiJ)
-    include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_animator_version}")
-
-    // Cloth Config (runtime)
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
-
-    // Real Camera (runtime)
-    modRuntimeOnly("maven.modrinth:real-camera:${project.real_camera_version}")
-
-    // Not Enough Animations (runtime)
-    modRuntimeOnly("maven.modrinth:not-enough-animations:${project.not_enough_animations_version}")
-}
-
-processResources {
-    inputs.property "version", project.version
-    filteringCharset "UTF-8"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-}
-
-def targetJavaVersion = 17
-tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
-}
-
-java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    archivesBaseName = project.archives_base_name
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.release = "${rootProject.java_version}" as int
     }
 }

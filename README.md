@@ -1,11 +1,64 @@
-# Kelvin's Better Player Animations Revived
-It seems that [the original mod](https://github.com/Kelvin285/KelvinsBetterPlayerAnimations) is now dead (but the mod is really cool), so I decided to revive it. 
+![Player Animation Rework icon](docs/media/icon_128x128.png)
 
-Don't have too high hopes for this mod as I may not update it in a while.
+# Player Animation Rework
 
-## Mod showcase
-[![Mod showcase](https://img.youtube.com/vi/tJwqF3JJxsY/maxresdefault.jpg)](https://youtu.be/tJwqF3JJxsY)
+Minecraft mod that reworks player animations.
 
-## Attribution
+Fork of [Kelvin's Better Player Animations](<https://github.com/Kelvin285/KelvinsBetterPlayerAnimations>).
 
-Slide sound from [Pixabay](https://pixabay.com/sound-effects/sliding-on-a-frozen-asphalt-road-30123), under a [royalty free license](https://pixabay.com/service/license-summary).
+## Dependencies
+
+### Required
+
+- [Fabric API](https://modrinth.com/mod/fabric-api) or [Quilt Standard Libraries](https://modrinth.com/mod/qsl)
+- [Architectury API](https://modrinth.com/mod/architectury-api)
+
+### Optional
+
+- [ModMenu](https://modrinth.com/mod/modmenu) for an in game configuration screen (only for singleplayer/LAN)
+
+## Incompatibilities
+
+[Create an issue](https://github.com/Steveplays28/realisticsleep/issues/new) on the issue tracker if you've found an incompatibility!
+
+## Download
+
+[![GitHub](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/github_vector.svg)](https://github.com/templateorganization/playeranimationrework)
+[![Modrinth](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/playeranimationrework)
+[![CurseForge](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/playeranimationrework)
+
+![Fabric](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/fabric_vector.svg)
+![Quilt](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/quilt_vector.svg)
+![Forge](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/forge_vector.svg)
+![NeoForge](docs/assets/badges/compact/supported/neoforge_vector.svg)
+
+See the version info in the filename for the supported Minecraft versions.  
+Made for the Fabric, Quilt, Forge, and NeoForge modloaders.  
+TODO side.
+
+## FAQ
+
+- Q: Will you be backporting this to lower Minecraft versions?  
+  A: No.
+
+- Q: Does this mod work in multiplayer?  
+  A: TODO.
+
+- Q: Does only the server need this mod or does the client need it too?  
+  A: TODO.
+
+## Contributing
+
+If you've encountered a problem or you want to suggest
+features, [create an issue](https://github.com/templateorganization/playeranimationrework/issues/new) on the issue tracker.
+
+### Development
+
+- `git clone https://github.com/templateorganization/playeranimationrework.git`
+- `cd playeranimationrework`
+- `./gradlew build`
+
+## License
+
+This project is licensed under LGPLv3,
+see [LICENSE](https://github.com/templateorganization/playeranimationrework/blob/1.20-1.20.1/LICENSE).
