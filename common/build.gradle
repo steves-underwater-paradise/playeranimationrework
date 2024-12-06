@@ -19,5 +19,8 @@ dependencies {
     modApi("dev.architectury:architectury:${rootProject.architectury_api_version}") {
         exclude group: 'net.fabricmc', module: 'fabric-loader'
     }
+
+    // Player Animator
+    modImplementation("dev.kosmx.player-anim:player-animation-lib:${rootProject.player_animator_version}")
 }
 

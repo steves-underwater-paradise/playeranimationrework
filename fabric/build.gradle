@@ -23,4 +23,7 @@ dependencies {
 
     // Architectury API
     modRuntimeOnly("dev.architectury:architectury-fabric:${rootProject.architectury_api_version}")
+
+    // Player Animator
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_animator_version}")
 }

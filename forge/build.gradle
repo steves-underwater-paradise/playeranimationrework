@@ -31,4 +31,7 @@ dependencies {
 
     // Architectury API
     modRuntimeOnly("dev.architectury:architectury-forge:${rootProject.architectury_api_version}")
+
+    // Player Animator
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${rootProject.player_animator_version}")
 }
