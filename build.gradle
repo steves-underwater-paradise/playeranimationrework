@@ -25,6 +25,7 @@ subprojects {
                 includeGroup "maven.modrinth"
             }
         }
+        maven { url = "https://maven.kosmx.dev/" }
     }
 
     dependencies {
