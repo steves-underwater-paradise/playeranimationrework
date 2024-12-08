@@ -67,7 +67,7 @@ public class AnimationDefinition {
 		return priority;
 	}
 
-	private static class AnimationTriggerDefinition {
+	public static class AnimationTriggerDefinition {
 		public static final Codec<AnimationTriggerDefinition> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(createTypeCodec().forGetter(animationTriggerDefinition -> Either.left(Map.of())), Codec.BOOL.fieldOf("loop").forGetter(AnimationTriggerDefinition::getLoop))
 						.apply(instance, AnimationTriggerDefinition::new));
@@ -135,7 +135,7 @@ public class AnimationDefinition {
 		}
 	}
 
-	private static class AnimationInterpolationDefinition {
+	public static class AnimationInterpolationDefinition {
 		public static final Codec<AnimationInterpolationDefinition> CODEC =
 				RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.optionalFieldOf("type").forGetter(AnimationInterpolationDefinition::getType),
 						Codec.FLOAT.optionalFieldOf("length_in").forGetter(AnimationInterpolationDefinition::getLengthIn),
@@ -182,7 +182,7 @@ public class AnimationDefinition {
 		}
 	}
 
-	private static class AnimationPriorityDefinition {
+	public static class AnimationPriorityDefinition {
 		public static final Codec<AnimationPriorityDefinition> CODEC = RecordCodecBuilder.create(instance -> instance
 				.group(Codec.INT.optionalFieldOf("head").forGetter(AnimationPriorityDefinition::getHead), Codec.INT.optionalFieldOf("torso").forGetter(AnimationPriorityDefinition::getTorso),
 						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("arms").forGetter(AnimationPriorityDefinition::getArms),
@@ -230,7 +230,7 @@ public class AnimationDefinition {
 			return legs;
 		}
 
-		private static class AnimationTwoPartPriorityDefinition {
+		public static class AnimationTwoPartPriorityDefinition {
 			public static final Codec<AnimationTwoPartPriorityDefinition> CODEC =
 					RecordCodecBuilder.create(instance -> instance.group(Codec.INT.optionalFieldOf("right").forGetter(AnimationTwoPartPriorityDefinition::getRight),
 							Codec.INT.optionalFieldOf("left").forGetter(AnimationTwoPartPriorityDefinition::getLeft)).apply(instance, AnimationTwoPartPriorityDefinition::new));

@@ -6,6 +6,10 @@ import com.mojang.serialization.JsonOps;
 import com.steveplays.playeranimationrework.PlayerAnimationRework;
 import com.steveplays.playeranimationrework.client.api.AnimationDefinition;
 import com.steveplays.playeranimationrework.client.registry.PARAnimationRegistry;
+import dev.kosmx.playerAnim.api.TransformType;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resource.ResourceManager;
@@ -13,6 +17,7 @@ import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
+import static com.steveplays.playeranimationrework.PlayerAnimationRework.TICKS_PER_SECOND;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +42,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 	 */
 	@Override
 	protected void apply(@Nullable Void prepared, ResourceManager resourceManager, Profiler profiler) {
-		// NO-OP
+		registerPlayerAnimationLayers();
 	}
 
 	private void loadAnimations(@NotNull ResourceManager resourceManager) {
@@ -59,6 +64,40 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			} catch (IOException e) {
 				PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}", animationIdentifier, e);
 			}
+		}
+	}
+
+	private static void registerPlayerAnimationLayers() {
+		if (PARAnimationRegistry.ANIMATION_REGISTRY.isEmpty()) {
+			return;
+		}
+
+		for (var animation : PARAnimationRegistry.ANIMATION_REGISTRY.entrySet()) {
+			PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(animation.getKey(), 100, clientPlayer -> {
+				@NotNull var playerAnimationLayer = new ModifierLayer<>();
+				@NotNull var animationDefinition = animation.getValue();
+				@NotNull var interpolationDefinitionOptional = animationDefinition.getAnimationInterpolationDefinition();
+				if (interpolationDefinitionOptional.isEmpty()) {
+					return playerAnimationLayer;
+				}
+
+				@NotNull var interpolationDefinition = interpolationDefinitionOptional.get();
+				@NotNull var lengthInOptional = interpolationDefinition.getLengthIn();
+				@NotNull var easeTypeOptional = interpolationDefinition.getConvertedType();
+				if (lengthInOptional.isEmpty() || easeTypeOptional.isEmpty()) {
+					return playerAnimationLayer;
+				}
+
+				@NotNull var lengthIn = lengthInOptional.get();
+				@NotNull var easeType = easeTypeOptional.get();
+				playerAnimationLayer.addModifierLast(new AbstractFadeModifier(Math.round(lengthIn / TICKS_PER_SECOND)) {
+					@Override
+					protected float getAlpha(String modelName, TransformType type, float progress) {
+						return easeType.invoke(progress);
+					}
+				});
+				return playerAnimationLayer;
+			});
 		}
 	}
 }
