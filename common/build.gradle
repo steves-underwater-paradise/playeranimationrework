@@ -21,6 +21,5 @@ dependencies {
     }
 
     // Player Animator
-    modImplementation("dev.kosmx.player-anim:player-animation-lib:${rootProject.player_animator_version}")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_animator_version}")
 }
-
