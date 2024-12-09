@@ -1,6 +1,7 @@
 package com.steveplays.playeranimationrework.client.api;
 
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +17,7 @@ import net.minecraft.util.Identifier;
 
 public class AnimationDefinition {
 	public static final AnimationDefinition DEFAULT = new AnimationDefinition(new Identifier(MOD_ID, "none"),
-			new AnimationTriggerDefinition(Either.right(Map.of("when", new Identifier(MOD_ID, "idle"))), false), Optional.empty(), Optional.empty());
+			new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false), Optional.empty(), Optional.empty());
 	public static final Codec<AnimationDefinition> CODEC =
 			RecordCodecBuilder
 					.create(instance -> instance
@@ -68,43 +69,26 @@ public class AnimationDefinition {
 	}
 
 	public static class AnimationTriggerDefinition {
-		public static final Codec<AnimationTriggerDefinition> CODEC = RecordCodecBuilder.create(
-				instance -> instance.group(createTypeCodec().forGetter(animationTriggerDefinition -> Either.left(Map.of())), Codec.BOOL.fieldOf("loop").forGetter(AnimationTriggerDefinition::getLoop))
-						.apply(instance, AnimationTriggerDefinition::new));
+		public static final Codec<AnimationTriggerDefinition> CODEC = RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.fieldOf("type").forGetter(AnimationTriggerDefinition::getType),
+				Codec.mapEither(Identifier.CODEC.fieldOf("identifier"), Identifier.CODEC.listOf().fieldOf("identifier")).forGetter(t -> {
+					return Either.right(t.getIdentifiers());
+				}), Codec.BOOL.optionalFieldOf("loop", false).forGetter(AnimationTriggerDefinition::getLoop)).apply(instance, AnimationTriggerDefinition::new));
 
+		public enum Type {
+			WHEN, WHILE, AFTER
+		}
+
+		private final @NotNull String type;
+		private final @NotNull Type convertedType;
+		private final @NotNull List<Identifier> identifiers;
 		private final boolean loop;
 
-		// These 2 fields cannot be final because of the use of Either
-		private @NotNull String type = "";
-		private @NotNull List<Identifier> identifiers = List.of();
-
-		AnimationTriggerDefinition(@NotNull Either<Map<String, List<Identifier>>, Map<String, Identifier>> triggerOrTriggers, boolean loop) {
-			triggerOrTriggers.ifLeft(triggersMap -> {
-				@NotNull var triggerOptional = triggersMap.entrySet().stream().findFirst();
-				if (triggerOptional.isEmpty()) {
-					throw new JsonSyntaxException("Invalid animation trigger definition: trigger key is empty");
-				}
-
-				@NotNull var trigger = triggerOptional.get();
-				type = trigger.getKey();
-
-				@NotNull var triggerIdentifiers = trigger.getValue();
-				if (triggerIdentifiers.isEmpty()) {
-					throw new JsonSyntaxException("Invalid animation trigger definition: trigger value is empty");
-				}
-				identifiers = triggerIdentifiers;
-			});
-			triggerOrTriggers.ifRight(triggerMap -> {
-				@NotNull var triggerOptional = triggerMap.entrySet().stream().findFirst();
-				if (triggerOptional.isEmpty()) {
-					throw new JsonSyntaxException("Invalid animation trigger definition: trigger key is empty");
-				}
-
-				@NotNull var trigger = triggerOptional.get();
-				type = trigger.getKey();
-				identifiers = List.of(trigger.getValue());
-			});
-
+		AnimationTriggerDefinition(@NotNull String type, @NotNull Either<Identifier, List<Identifier>> identifierOrIdentifiers, boolean loop) {
+			this.type = type;
+			this.convertedType = Type.valueOf(type.toUpperCase());
+			identifiers = new ArrayList<>();
+			identifierOrIdentifiers.ifLeft(identifier -> this.identifiers.add(identifier));
+			identifierOrIdentifiers.ifRight(identifiers -> this.identifiers.addAll(identifiers));
 			this.loop = loop;
 		}
 
@@ -113,6 +97,13 @@ public class AnimationDefinition {
 		 */
 		public @NotNull String getType() {
 			return type;
+		}
+
+		/**
+		 * @return The animation trigger's converted type.
+		 */
+		public @NotNull Type getConvertedType() {
+			return convertedType;
 		}
 
 		/**

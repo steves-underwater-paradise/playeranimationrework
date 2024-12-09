@@ -3,8 +3,10 @@
 	"identifier": "namespace:animation_identifier",
 	// Required
 	"trigger": {
-		// Required - single value || array - when || while || after (other animation)
-		"while": "namespace:trigger",
+		// Required - when || while || after (other animation)
+        "type": "while",
+        // Required - single value || array
+		"identifier": "namespace:trigger",
 		// true || false
 		"loop": true
 	},

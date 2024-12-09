@@ -1,6 +1,8 @@
 package com.steveplays.playeranimationrework.client.resource;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import com.steveplays.playeranimationrework.PlayerAnimationRework;
@@ -16,7 +18,6 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.TICKS_PER_SECOND;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
@@ -24,9 +25,9 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class PARResourceReloader extends SinglePreparationResourceReloader<Void> {
-	private static final @NotNull Gson GSON = new Gson();
+	private static final @NotNull Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 	private static final @NotNull String JSON_FILE_SUFFIX = ".json";
-	private static final @NotNull String ANIMATION_DEFINITIONS_FOLDER_NAME = "animations";
+	private static final @NotNull String ANIMATION_DEFINITIONS_FOLDER_NAME = "par_animations";
 
 	/**
 	 * The preparation stage, ran on worker threads.
@@ -48,7 +49,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 	private void loadAnimations(@NotNull ResourceManager resourceManager) {
 		PARAnimationRegistry.ANIMATION_REGISTRY.clear();
 
-		@NotNull var jsonAnimations = resourceManager.findResources(String.format("%s/%s", MOD_ID, ANIMATION_DEFINITIONS_FOLDER_NAME), identifier -> identifier.toString().endsWith(JSON_FILE_SUFFIX));
+		@NotNull var jsonAnimations = resourceManager.findResources(ANIMATION_DEFINITIONS_FOLDER_NAME, identifier -> identifier.toString().endsWith(JSON_FILE_SUFFIX));
 		for (@NotNull var jsonAnimation : jsonAnimations.entrySet()) {
 			@NotNull var jsonAnimationPath = jsonAnimation.getKey();
 			@NotNull var jsonAnimationPathSplit = jsonAnimationPath.getPath().replace(JSON_FILE_SUFFIX, "").split("/");
@@ -59,8 +60,11 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			}
 
 			try {
-				PARAnimationRegistry.ANIMATION_REGISTRY.put(animationIdentifier, AnimationDefinition.CODEC
-						.parse(JsonOps.INSTANCE, GSON.fromJson(new String(jsonAnimation.getValue().getInputStream().readAllBytes()), JsonElement.class)).result().orElseThrow());
+				@NotNull var animationDefinitionOrError =
+						AnimationDefinition.CODEC.parse(JsonOps.INSTANCE, GSON.fromJson(new String(jsonAnimation.getValue().getInputStream().readAllBytes()), JsonElement.class)).get();
+				animationDefinitionOrError.ifLeft(animationDefinition -> PARAnimationRegistry.ANIMATION_REGISTRY.put(animationIdentifier, animationDefinition));
+				animationDefinitionOrError.ifRight(partialAnimationDefinition -> PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}",
+						animationIdentifier, partialAnimationDefinition.message()));
 			} catch (IOException e) {
 				PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}", animationIdentifier, e);
 			}
