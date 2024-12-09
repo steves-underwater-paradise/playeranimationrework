@@ -13,6 +13,10 @@ public class PAREventRegistry {
 			put(new Identifier(MOD_ID, "jump"), PARPlayerEvents.JUMP);
 			put(new Identifier(MOD_ID, "idle_start"), PARPlayerEvents.IDLE_START);
 			put(new Identifier(MOD_ID, "idle_stop"), PARPlayerEvents.IDLE_STOP);
+			put(new Identifier(MOD_ID, "walk_start"), PARPlayerEvents.WALK_START);
+			put(new Identifier(MOD_ID, "walk_stop"), PARPlayerEvents.WALK_STOP);
+			put(new Identifier(MOD_ID, "run_start"), PARPlayerEvents.RUN_START);
+			put(new Identifier(MOD_ID, "run_stop"), PARPlayerEvents.RUN_STOP);
 		}
 	};
 }

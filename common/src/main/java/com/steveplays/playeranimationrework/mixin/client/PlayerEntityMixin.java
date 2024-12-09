@@ -19,8 +19,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-	@Unique
-	private boolean playeranimationrework$isIdle = false;
+	@Unique private boolean playeranimationrework$isIdle = false;
 	private boolean playeranimationrework$isWalking = false;
 	private boolean playeranimationrework$isRunning = false;
 
@@ -69,9 +68,29 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (!playeranimationrework$isRunning && this.isSprinting()) {
 				PARPlayerEvents.RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isRunning = true;
+
+				if (playeranimationrework$isWalking) {
+					PARPlayerEvents.WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isWalking = false;
+				}
+
+				if (playeranimationrework$isIdle) {
+					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isIdle = false;
+				}
 			} else if (!playeranimationrework$isWalking) {
 				PARPlayerEvents.WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isWalking = true;
+
+				if (playeranimationrework$isRunning) {
+					PARPlayerEvents.RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isRunning = false;
+				}
+
+				if (playeranimationrework$isIdle) {
+					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isIdle = false;
+				}
 			} else if (playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isIdle = false;
