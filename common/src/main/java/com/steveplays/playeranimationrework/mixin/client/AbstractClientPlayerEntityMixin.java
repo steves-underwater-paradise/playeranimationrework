@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.steveplays.playeranimationrework.PlayerAnimationRework;
 import com.steveplays.playeranimationrework.client.api.AnimationDefinition;
+import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
 import com.steveplays.playeranimationrework.client.extension.AnimationDataExtension;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
@@ -21,7 +22,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
 
 @Mixin(AbstractClientPlayerEntity.class)
-public class AbstractClientPlayerEntityMixin implements AnimationDataExtension {
+public abstract class AbstractClientPlayerEntityMixin implements AnimationDataExtension {
 	@Unique private final @NotNull List<AnimationDefinition> playeranimationrework$currentAnimations = List.of();
 
 	@Override
@@ -31,13 +32,13 @@ public class AbstractClientPlayerEntityMixin implements AnimationDataExtension {
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	private void playeranimationrework$tickAnimationStateMachine(CallbackInfo ci) {
-		@NotNull var animationIdentifier = new Identifier(MOD_ID, "idle");
-		@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
-				(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayerEntity) (Object) this).get(animationIdentifier);
-		if (playerAnimationLayer == null) {
-			PlayerAnimationRework.LOGGER.info("playerAnimationLayer == null");
-		} else {
-			playerAnimationLayer.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationIdentifier)));
-		}
+		// @NotNull var animationIdentifier = new Identifier(MOD_ID, "idle");
+		// @SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
+		// (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayerEntity) (Object) this).get(animationIdentifier);
+		// if (playerAnimationLayer == null) {
+		// PlayerAnimationRework.LOGGER.info("playerAnimationLayer == null");
+		// } else {
+		// playerAnimationLayer.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationIdentifier)));
+		// }
 	}
 }

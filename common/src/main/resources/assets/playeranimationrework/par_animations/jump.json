@@ -1,14 +1,14 @@
 {
-  "identifier": "playeranimationrework:idle",
+  "identifier": "playeranimationrework:jump",
   "trigger": {
-    "type": "while",
-    "identifier": "playeranimationrework:idle",
-    "loop": true
+    "type": "when",
+    "identifier": "playeranimationrework:jump",
+    "loop": false
   },
   "interpolation": {
     "type": "INOUTSINE",
     "length_in": 0.1,
-    "length_out": 0.25
+    "length_out": 1
   },
   "priority": {
     "head": 1000,

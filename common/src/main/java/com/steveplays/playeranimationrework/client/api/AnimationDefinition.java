@@ -3,36 +3,33 @@ package com.steveplays.playeranimationrework.client.api;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
-import com.google.gson.JsonSyntaxException;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Keyable;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.kosmx.playerAnim.core.util.Ease;
 import net.minecraft.util.Identifier;
 
 public class AnimationDefinition {
 	public static final AnimationDefinition DEFAULT = new AnimationDefinition(new Identifier(MOD_ID, "none"),
-			new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false), Optional.empty(), Optional.empty());
+			new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false), new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), Optional.empty());
 	public static final Codec<AnimationDefinition> CODEC =
 			RecordCodecBuilder
 					.create(instance -> instance
 							.group(Identifier.CODEC.fieldOf("identifier").forGetter(AnimationDefinition::getIdentifier),
 									AnimationTriggerDefinition.CODEC.fieldOf("trigger").forGetter(AnimationDefinition::getAnimationTriggerDefinition),
-									AnimationInterpolationDefinition.CODEC.optionalFieldOf("interpolation").forGetter(AnimationDefinition::getAnimationInterpolationDefinition),
+									AnimationInterpolationDefinition.CODEC.optionalFieldOf("interpolation", new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f))
+											.forGetter(AnimationDefinition::getAnimationInterpolationDefinition),
 									AnimationPriorityDefinition.CODEC.optionalFieldOf("priority").forGetter(AnimationDefinition::getAnimationPriorityDefinition))
 							.apply(instance, AnimationDefinition::new));
 
 	private final @NotNull Identifier identifier;
 	private final @NotNull AnimationTriggerDefinition trigger;
-	private final @NotNull Optional<AnimationInterpolationDefinition> interpolation;
+	private final @NotNull AnimationInterpolationDefinition interpolation;
 	private final @NotNull Optional<AnimationPriorityDefinition> priority;
 
-	AnimationDefinition(@NotNull Identifier identifier, @NotNull AnimationTriggerDefinition trigger, @NotNull Optional<AnimationInterpolationDefinition> interpolation,
+	AnimationDefinition(@NotNull Identifier identifier, @NotNull AnimationTriggerDefinition trigger, @NotNull AnimationInterpolationDefinition interpolation,
 			@NotNull Optional<AnimationPriorityDefinition> priority) {
 		this.identifier = identifier;
 		this.trigger = trigger;
@@ -57,7 +54,7 @@ public class AnimationDefinition {
 	/**
 	 * @return The animation's interpolation.
 	 */
-	public @NotNull Optional<AnimationInterpolationDefinition> getAnimationInterpolationDefinition() {
+	public @NotNull AnimationInterpolationDefinition getAnimationInterpolationDefinition() {
 		return interpolation;
 	}
 
@@ -119,27 +116,25 @@ public class AnimationDefinition {
 		public boolean getLoop() {
 			return loop;
 		}
-
-		private static MapCodec<Either<Map<String, List<Identifier>>, Map<String, Identifier>>> createTypeCodec() {
-			return Codec.mapEither(Codec.simpleMap(Codec.STRING, Identifier.CODEC.listOf(), Keyable.forStrings(() -> List.of("when", "while", "after").stream())),
-					Codec.simpleMap(Codec.STRING, Identifier.CODEC, Keyable.forStrings(() -> List.of("when", "while", "after").stream())));
-		}
 	}
 
 	public static class AnimationInterpolationDefinition {
 		public static final Codec<AnimationInterpolationDefinition> CODEC =
-				RecordCodecBuilder.create(instance -> instance.group(Codec.STRING.optionalFieldOf("type").forGetter(AnimationInterpolationDefinition::getType),
-						Codec.FLOAT.optionalFieldOf("length_in").forGetter(AnimationInterpolationDefinition::getLengthIn),
-						Codec.FLOAT.optionalFieldOf("length_out").forGetter(AnimationInterpolationDefinition::getLengthOut)).apply(instance, AnimationInterpolationDefinition::new));
+				RecordCodecBuilder
+						.create(instance -> instance
+								.group(Codec.STRING.optionalFieldOf("type", "INOUTSINE").forGetter(AnimationInterpolationDefinition::getType),
+										Codec.FLOAT.optionalFieldOf("length_in", 0.5f).forGetter(AnimationInterpolationDefinition::getLengthIn),
+										Codec.FLOAT.optionalFieldOf("length_out", 0.5f).forGetter(AnimationInterpolationDefinition::getLengthOut))
+								.apply(instance, AnimationInterpolationDefinition::new));
 
-		private final @NotNull Optional<String> type;
-		private final @NotNull Optional<Ease> convertedType;
-		private final @NotNull Optional<Float> lengthIn;
-		private final @NotNull Optional<Float> lengthOut;
+		private final @NotNull String type;
+		private final @NotNull Ease convertedType;
+		private final @NotNull Float lengthIn;
+		private final @NotNull Float lengthOut;
 
-		AnimationInterpolationDefinition(@NotNull Optional<String> type, @NotNull Optional<Float> lengthIn, @NotNull Optional<Float> lengthOut) {
+		AnimationInterpolationDefinition(@NotNull String type, @NotNull Float lengthIn, @NotNull Float lengthOut) {
 			this.type = type;
-			this.convertedType = type.isEmpty() ? Optional.empty() : Optional.of(Ease.valueOf(type.get()));
+			this.convertedType = Ease.valueOf(type);
 			this.lengthIn = lengthIn;
 			this.lengthOut = lengthOut;
 		}
@@ -147,28 +142,28 @@ public class AnimationDefinition {
 		/**
 		 * @return The animation interpolation type.
 		 */
-		public @NotNull Optional<String> getType() {
+		public @NotNull String getType() {
 			return type;
 		}
 
 		/**
 		 * @return The animation interpolation type, converted to an instance of {@link Ease}.
 		 */
-		public @NotNull Optional<Ease> getConvertedType() {
+		public @NotNull Ease getConvertedType() {
 			return convertedType;
 		}
 
 		/**
 		 * @return The animation interpolation's length in.
 		 */
-		public @NotNull Optional<Float> getLengthIn() {
+		public @NotNull Float getLengthIn() {
 			return lengthIn;
 		}
 
 		/**
 		 * @return The animation interpolation's length out.
 		 */
-		public @NotNull Optional<Float> getLengthOut() {
+		public @NotNull Float getLengthOut() {
 			return lengthOut;
 		}
 	}
