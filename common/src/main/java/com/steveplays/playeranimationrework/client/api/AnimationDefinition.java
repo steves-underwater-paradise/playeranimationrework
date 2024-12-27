@@ -14,10 +14,9 @@ import net.minecraft.util.Identifier;
 public class AnimationDefinition {
 	private static final int DEFAULT_PRIORITY = 1000;
 
-	public static final AnimationDefinition DEFAULT =
-			new AnimationDefinition(new Identifier(MOD_ID, "none"), new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false),
-					new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY,
-							new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY), new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)));
+	public static final AnimationDefinition DEFAULT = new AnimationDefinition(Identifier.of(MOD_ID, "none"), new AnimationTriggerDefinition("when", Either.left(Identifier.of(MOD_ID, "idle")), false),
+			new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY,
+					new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY), new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)));
 	public static final Codec<AnimationDefinition> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(Identifier.CODEC.fieldOf("identifier").forGetter(AnimationDefinition::getIdentifier),
 					AnimationTriggerDefinition.CODEC.fieldOf("trigger").forGetter(AnimationDefinition::getAnimationTriggerDefinition),

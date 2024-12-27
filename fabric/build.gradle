@@ -2,31 +2,7 @@
 //file:noinspection GroovyAssignabilityCheck
 //file:noinspection DependencyNotationArgument
 
-plugins {
-    id "com.github.johnrengelman.shadow" version "${shadow_plugin_version}"
-}
-
-architectury {
-    platformSetupLoomIde()
-    fabric()
-}
-
-configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin since it *excludes* files
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentFabric.extendsFrom common
-}
-
-loom {
-    accessWidenerPath = project(":common").loom.accessWidenerPath
-}
-
 dependencies {
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
-
     // Fabric Loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
@@ -40,27 +16,6 @@ dependencies {
     modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_animator_version}")
 }
 
-processResources {
-    inputs.property "version", project.version
-
-    from(project(":common").sourceSets["main"].resources) {
-        include("assets", "data", "resourcepacks")
-    }
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "mod_id": rootProject.mod_id,
-                "mod_name": rootProject.mod_name,
-                "mod_description": rootProject.mod_description,
-                "mod_license": rootProject.mod_license,
-                "git_repository_host": rootProject.git_repository_host,
-                "git_organization": rootProject.git_organization,
-                "curseforge_project_id": rootProject.curseforge_project_id,
-                "modrinth_project_id": rootProject.modrinth_project_id,
-                "supported_minecraft_version": rootProject.supported_minecraft_version,
-                "fabric_loader_version": rootProject.fabric_loader_version,
-                "forge_version": rootProject.neoforge_version,
-                "fabric_api_version": rootProject.fabric_api_version,
-                "architectury_api_version": rootProject.architectury_api_version
-    }
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
 }

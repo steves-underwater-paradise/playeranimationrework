@@ -52,7 +52,7 @@ jobs:
       - name: Setup JDK (Temurin 17)
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'temurin'
           cache: gradle
 
@@ -85,7 +85,7 @@ jobs:
           changelog-file: CHANGELOG_LATEST.md
 
       # https://github.com/marketplace/actions/mc-publish
-      - name: Publish mod (NeoForge/Forge)
+      - name: Publish mod (NeoForge)
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           # CurseForge
@@ -94,8 +94,8 @@ jobs:
           name: ${{ steps.mod_version.outputs.value }} (${{ steps.supported_minecraft_version_name.outputs.value }})
           github-tag: ${{ env.release_tag_name }}
           files: |
-            forge/build/libs/!(*-@(sources|dev-shadow|javadoc|transformProduction*).jar)
-            forge/build/libs/*-@(sources|javadoc).jar
+            neoforge/build/libs/!(*-@(sources|dev-shadow|javadoc|transformProduction*).jar)
+            neoforge/build/libs/*-@(sources|javadoc).jar
           version-type: release
           modrinth-featured: false
           changelog-file: CHANGELOG_LATEST.md

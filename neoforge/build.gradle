@@ -1,0 +1,15 @@
+//file:noinspection GroovyAccessibility
+//file:noinspection GroovyAssignabilityCheck
+//file:noinspection DependencyNotationArgument
+
+dependencies {
+    // Architectury API
+    modRuntimeOnly("dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}")
+
+    // Player Animator
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-neoforge:${rootProject.player_animator_version}")
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}

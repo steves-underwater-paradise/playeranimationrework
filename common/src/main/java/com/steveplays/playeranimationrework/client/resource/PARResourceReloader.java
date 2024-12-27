@@ -15,6 +15,7 @@ import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
+import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
@@ -69,9 +70,9 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 
 			try {
 				@NotNull var animationDefinitionOrError =
-						AnimationDefinition.CODEC.parse(JsonOps.INSTANCE, GSON.fromJson(new String(jsonAnimation.getValue().getInputStream().readAllBytes()), JsonElement.class)).get();
-				animationDefinitionOrError.ifLeft(animationDefinition -> PARAnimationRegistry.ANIMATION_REGISTRY.put(animationIdentifier, animationDefinition));
-				animationDefinitionOrError.ifRight(partialAnimationDefinition -> PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}",
+						AnimationDefinition.CODEC.parse(JsonOps.INSTANCE, GSON.fromJson(new String(jsonAnimation.getValue().getInputStream().readAllBytes()), JsonElement.class));
+				animationDefinitionOrError.ifSuccess(animationDefinition -> PARAnimationRegistry.ANIMATION_REGISTRY.put(animationIdentifier, animationDefinition));
+				animationDefinitionOrError.ifError(partialAnimationDefinition -> PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}",
 						animationIdentifier, partialAnimationDefinition.message()));
 			} catch (IOException e) {
 				PlayerAnimationRework.LOGGER.error("Exception thrown while deserializing an animation definition (identifier: {}): {}", animationIdentifier, e);
@@ -108,7 +109,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(Math.round(interpolationLengthIn * TICKS_PER_SECOND), interpolationEaseType),
-								new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
+								new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
 					});
 				}
 			} else if (animationTriggerType == Type.WHILE) {
@@ -122,7 +123,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(Math.round(interpolationLengthIn * TICKS_PER_SECOND), interpolationEaseType),
-								new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
+								new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
 					});
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier.withSuffixedPath(STOP_SUFFIX)).register(clientPlayer -> {
 						@NotNull var animationIdentifier = animationDefinition.getIdentifier();
@@ -146,7 +147,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(Math.round(interpolationLengthIn * TICKS_PER_SECOND), interpolationEaseType),
-								new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
+								new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier)), true);
 					});
 				}
 			}

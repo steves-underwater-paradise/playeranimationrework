@@ -23,17 +23,16 @@ Fork of [Kelvin's Better Player Animations](<https://github.com/Kelvin285/Kelvin
 
 ## Download
 
-[![GitHub](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/github_vector.svg)](https://github.com/templateorganization/playeranimationrework)
+[![GitHub](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/github_vector.svg)](https://github.com/steves-underwater-paradise/playeranimationrework)
 [![Modrinth](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/playeranimationrework)
 [![CurseForge](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/playeranimationrework)
 
 ![Fabric](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/fabric_vector.svg)
 ![Quilt](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/quilt_vector.svg)
-![Forge](https://github.com/intergrav/devins-badges/raw/2dc967fc44dc73850eee42c133a55c8ffc5e30cb/assets/compact/supported/forge_vector.svg)
 ![NeoForge](docs/assets/badges/compact/supported/neoforge_vector.svg)
 
 See the version info in the filename for the supported Minecraft versions.  
-Made for the Fabric, Quilt, Forge, and NeoForge modloaders.  
+Made for the Fabric, Quilt and NeoForge modloaders.  
 TODO side.
 
 ## FAQ
@@ -50,15 +49,15 @@ TODO side.
 ## Contributing
 
 If you've encountered a problem or you want to suggest
-features, [create an issue](https://github.com/templateorganization/playeranimationrework/issues/new) on the issue tracker.
+features, [create an issue](https://github.com/steves-underwater-paradise/playeranimationrework/issues/new) on the issue tracker.
 
 ### Development
 
-- `git clone https://github.com/templateorganization/playeranimationrework.git`
+- `git clone https://github.com/steves-underwater-paradise/playeranimationrework.git`
 - `cd playeranimationrework`
 - `./gradlew build`
 
 ## License
 
 This project is licensed under LGPLv3,
-see [LICENSE](https://github.com/templateorganization/playeranimationrework/blob/1.20-1.20.1/LICENSE).
+see [LICENSE](https://github.com/steves-underwater-paradise/playeranimationrework/blob/1.21.1/LICENSE).
