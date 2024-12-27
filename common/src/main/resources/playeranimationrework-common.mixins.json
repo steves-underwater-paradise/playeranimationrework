@@ -9,6 +9,7 @@
   },
   "client": [
     "client.AbstractClientPlayerEntityMixin",
-    "client.PlayerEntityMixin"
+    "client.PlayerEntityMixin",
+    "client.ClientPlayerEntityMixin"
   ]
 }

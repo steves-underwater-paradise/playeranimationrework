@@ -10,7 +10,11 @@ import net.minecraft.util.Identifier;
 public class PAREventRegistry {
 	public static final Map<Identifier, Event<PARPlayerEvents.ClientPlayerEvent>> EVENT_REGISTRY = new ConcurrentHashMap<>() {
 		{
+			// when type animations
 			put(new Identifier(MOD_ID, "jump"), PARPlayerEvents.JUMP);
+			put(new Identifier(MOD_ID, "punch"), PARPlayerEvents.PUNCH);
+
+			// while type animations
 			put(new Identifier(MOD_ID, "idle_start"), PARPlayerEvents.IDLE_START);
 			put(new Identifier(MOD_ID, "idle_stop"), PARPlayerEvents.IDLE_STOP);
 			put(new Identifier(MOD_ID, "walk_start"), PARPlayerEvents.WALK_START);

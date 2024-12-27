@@ -11,7 +11,6 @@ import com.steveplays.playeranimationrework.client.api.AnimationDefinition.Anima
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
 import com.steveplays.playeranimationrework.client.registry.PARAnimationRegistry;
 import com.steveplays.playeranimationrework.client.registry.PAREventRegistry;
-import dev.kosmx.playerAnim.api.TransformType;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -25,7 +24,6 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
-import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.TICKS_PER_SECOND;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +85,9 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 		}
 
 		for (var animation : PARAnimationRegistry.ANIMATION_REGISTRY.entrySet()) {
+			@NotNull var animationTriggerIdentifier = animation.getKey();
 			@NotNull var animationDefinition = animation.getValue();
-			PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(animation.getKey(), 100, clientPlayer -> {
+			PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(animationTriggerIdentifier, animationDefinition.getAnimationPriorityDefinition().getTorso(), clientPlayer -> {
 				return new ModifierLayer<>();
 			});
 
@@ -103,7 +102,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier).register(clientPlayer -> {
 						@NotNull var animationIdentifier = animationDefinition.getIdentifier();
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
-								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationIdentifier);
+								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null) {
 							return;
 						}

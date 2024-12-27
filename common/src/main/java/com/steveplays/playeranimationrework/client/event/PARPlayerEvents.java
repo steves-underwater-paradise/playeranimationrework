@@ -8,7 +8,12 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 
 public interface PARPlayerEvents {
 	Event<AfterAnimationEvent> AFTER_ANIMATION = EventFactory.createLoop();
+
+	// when type animations
 	Event<ClientPlayerEvent> JUMP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> PUNCH = EventFactory.createLoop();
+
+	// while type animations
 	Event<ClientPlayerEvent> IDLE_START = EventFactory.createLoop();
 	Event<ClientPlayerEvent> IDLE_STOP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> WALK_START = EventFactory.createLoop();

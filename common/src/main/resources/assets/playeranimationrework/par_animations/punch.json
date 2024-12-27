@@ -1,0 +1,25 @@
+{
+  "identifier": "playeranimationrework:punch_right_arm",
+  "trigger": {
+    "type": "when",
+    "identifier": "playeranimationrework:punch",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.0,
+    "length_out": 0.0
+  },
+  "priority": {
+    "head": 1000,
+    "torso": 2000,
+    "arms": {
+      "right_arm": 1000,
+      "left_arm": 1000
+    },
+    "legs": {
+      "right_leg": 1000,
+      "left_leg": 1000
+    }
+  }
+}

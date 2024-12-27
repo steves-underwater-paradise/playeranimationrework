@@ -3,34 +3,40 @@ package com.steveplays.playeranimationrework.client.api;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.MOD_ID;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.steveplays.playeranimationrework.client.api.AnimationDefinition.AnimationPriorityDefinition.AnimationTwoPartPriorityDefinition;
 import dev.kosmx.playerAnim.core.util.Ease;
 import net.minecraft.util.Identifier;
 
 public class AnimationDefinition {
-	public static final AnimationDefinition DEFAULT = new AnimationDefinition(new Identifier(MOD_ID, "none"),
-			new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false), new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), Optional.empty());
-	public static final Codec<AnimationDefinition> CODEC =
-			RecordCodecBuilder
-					.create(instance -> instance
-							.group(Identifier.CODEC.fieldOf("identifier").forGetter(AnimationDefinition::getIdentifier),
-									AnimationTriggerDefinition.CODEC.fieldOf("trigger").forGetter(AnimationDefinition::getAnimationTriggerDefinition),
-									AnimationInterpolationDefinition.CODEC.optionalFieldOf("interpolation", new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f))
-											.forGetter(AnimationDefinition::getAnimationInterpolationDefinition),
-									AnimationPriorityDefinition.CODEC.optionalFieldOf("priority").forGetter(AnimationDefinition::getAnimationPriorityDefinition))
-							.apply(instance, AnimationDefinition::new));
+	private static final int DEFAULT_PRIORITY = 1000;
+
+	public static final AnimationDefinition DEFAULT =
+			new AnimationDefinition(new Identifier(MOD_ID, "none"), new AnimationTriggerDefinition("when", Either.left(new Identifier(MOD_ID, "idle")), false),
+					new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY,
+							new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY), new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)));
+	public static final Codec<AnimationDefinition> CODEC = RecordCodecBuilder.create(instance -> instance
+			.group(Identifier.CODEC.fieldOf("identifier").forGetter(AnimationDefinition::getIdentifier),
+					AnimationTriggerDefinition.CODEC.fieldOf("trigger").forGetter(AnimationDefinition::getAnimationTriggerDefinition),
+					AnimationInterpolationDefinition.CODEC.optionalFieldOf("interpolation", new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f))
+							.forGetter(AnimationDefinition::getAnimationInterpolationDefinition),
+					AnimationPriorityDefinition.CODEC.optionalFieldOf("priority",
+							new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY, new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY),
+									new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)))
+							.forGetter(AnimationDefinition::getAnimationPriorityDefinition))
+			.apply(instance, AnimationDefinition::new));
+
 
 	private final @NotNull Identifier identifier;
 	private final @NotNull AnimationTriggerDefinition trigger;
 	private final @NotNull AnimationInterpolationDefinition interpolation;
-	private final @NotNull Optional<AnimationPriorityDefinition> priority;
+	private final @NotNull AnimationPriorityDefinition priority;
 
 	AnimationDefinition(@NotNull Identifier identifier, @NotNull AnimationTriggerDefinition trigger, @NotNull AnimationInterpolationDefinition interpolation,
-			@NotNull Optional<AnimationPriorityDefinition> priority) {
+			@NotNull AnimationPriorityDefinition priority) {
 		this.identifier = identifier;
 		this.trigger = trigger;
 		this.interpolation = interpolation;
@@ -61,7 +67,7 @@ public class AnimationDefinition {
 	/**
 	 * @return The animation's priority.
 	 */
-	public @NotNull Optional<AnimationPriorityDefinition> getAnimationPriorityDefinition() {
+	public @NotNull AnimationPriorityDefinition getAnimationPriorityDefinition() {
 		return priority;
 	}
 
@@ -169,19 +175,21 @@ public class AnimationDefinition {
 	}
 
 	public static class AnimationPriorityDefinition {
-		public static final Codec<AnimationPriorityDefinition> CODEC = RecordCodecBuilder.create(instance -> instance
-				.group(Codec.INT.optionalFieldOf("head").forGetter(AnimationPriorityDefinition::getHead), Codec.INT.optionalFieldOf("torso").forGetter(AnimationPriorityDefinition::getTorso),
-						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("arms").forGetter(AnimationPriorityDefinition::getArms),
-						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("legs").forGetter(AnimationPriorityDefinition::getLegs))
-				.apply(instance, AnimationPriorityDefinition::new));
+		public static final Codec<AnimationPriorityDefinition> CODEC =
+				RecordCodecBuilder.create(instance -> instance.group(Codec.INT.optionalFieldOf("head", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getHead),
+						Codec.INT.optionalFieldOf("torso", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getTorso),
+						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("arms", new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY))
+								.forGetter(AnimationPriorityDefinition::getArms),
+						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("legs", new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY))
+								.forGetter(AnimationPriorityDefinition::getLegs))
+						.apply(instance, AnimationPriorityDefinition::new));
 
-		private final @NotNull Optional<Integer> head;
-		private final @NotNull Optional<Integer> torso;
-		private final @NotNull Optional<AnimationTwoPartPriorityDefinition> arms;
-		private final @NotNull Optional<AnimationTwoPartPriorityDefinition> legs;
+		private final @NotNull Integer head;
+		private final @NotNull Integer torso;
+		private final @NotNull AnimationTwoPartPriorityDefinition arms;
+		private final @NotNull AnimationTwoPartPriorityDefinition legs;
 
-		public AnimationPriorityDefinition(@NotNull Optional<Integer> head, @NotNull Optional<Integer> torso, @NotNull Optional<AnimationTwoPartPriorityDefinition> arms,
-				@NotNull Optional<AnimationTwoPartPriorityDefinition> legs) {
+		public AnimationPriorityDefinition(@NotNull Integer head, @NotNull Integer torso, @NotNull AnimationTwoPartPriorityDefinition arms, @NotNull AnimationTwoPartPriorityDefinition legs) {
 			this.head = head;
 			this.torso = torso;
 			this.arms = arms;
@@ -191,40 +199,42 @@ public class AnimationDefinition {
 		/**
 		 * @return The animation priority of the head.
 		 */
-		public @NotNull Optional<Integer> getHead() {
+		public @NotNull Integer getHead() {
 			return head;
 		}
 
 		/**
 		 * @return The animation priority of the torso.
 		 */
-		public @NotNull Optional<Integer> getTorso() {
+		public @NotNull Integer getTorso() {
 			return torso;
 		}
 
 		/**
 		 * @return The animation priority of the arms.
 		 */
-		public @NotNull Optional<AnimationTwoPartPriorityDefinition> getArms() {
+		public @NotNull AnimationTwoPartPriorityDefinition getArms() {
 			return arms;
 		}
 
 		/**
 		 * @return The animation priority of the legs.
 		 */
-		public @NotNull Optional<AnimationTwoPartPriorityDefinition> getLegs() {
+		public @NotNull AnimationTwoPartPriorityDefinition getLegs() {
 			return legs;
 		}
 
 		public static class AnimationTwoPartPriorityDefinition {
 			public static final Codec<AnimationTwoPartPriorityDefinition> CODEC =
-					RecordCodecBuilder.create(instance -> instance.group(Codec.INT.optionalFieldOf("right").forGetter(AnimationTwoPartPriorityDefinition::getRight),
-							Codec.INT.optionalFieldOf("left").forGetter(AnimationTwoPartPriorityDefinition::getLeft)).apply(instance, AnimationTwoPartPriorityDefinition::new));
+					RecordCodecBuilder.create(instance -> instance
+							.group(Codec.INT.optionalFieldOf("right", DEFAULT_PRIORITY).forGetter(AnimationTwoPartPriorityDefinition::getRight),
+									Codec.INT.optionalFieldOf("left", DEFAULT_PRIORITY).forGetter(AnimationTwoPartPriorityDefinition::getLeft))
+							.apply(instance, AnimationTwoPartPriorityDefinition::new));
 
-			private final @NotNull Optional<Integer> right;
-			private final @NotNull Optional<Integer> left;
+			private final @NotNull Integer right;
+			private final @NotNull Integer left;
 
-			public AnimationTwoPartPriorityDefinition(@NotNull Optional<Integer> right, @NotNull Optional<Integer> left) {
+			public AnimationTwoPartPriorityDefinition(@NotNull Integer right, @NotNull Integer left) {
 				this.right = right;
 				this.left = left;
 			}
@@ -232,14 +242,14 @@ public class AnimationDefinition {
 			/**
 			 * @return The animation priority of the right part.
 			 */
-			public @NotNull Optional<Integer> getRight() {
+			public @NotNull Integer getRight() {
 				return right;
 			}
 
 			/**
 			 * @return The animation priority of the left part.
 			 */
-			public @NotNull Optional<Integer> getLeft() {
+			public @NotNull Integer getLeft() {
 				return left;
 			}
 		}

@@ -1,0 +1,40 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "punch_right_arm": {
+      "animation_length": 0.28,
+      "bones": {
+        "right_arm": {
+          "rotation": {
+            "0.0": [
+              202.42004,
+              47.82197,
+              -86.53902
+            ],
+            "0.16": {
+              "pre": [
+                284.81836,
+                24.76222,
+                -59.04817
+              ],
+              "post": [
+                284.81836,
+                24.76222,
+                -59.04817
+              ],
+              "lerp_mode": "catmullrom"
+            },
+            "0.28": {
+              "post": [
+                360,
+                0,
+                0
+              ],
+              "lerp_mode": "catmullrom"
+            }
+          }
+        }
+      }
+    }
+  }
+}
