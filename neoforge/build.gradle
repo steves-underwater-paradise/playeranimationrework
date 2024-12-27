@@ -7,7 +7,7 @@ dependencies {
     modRuntimeOnly("dev.architectury:architectury-neoforge:${rootProject.architectury_api_version}")
 
     // Player Animator
-    modImplementation("dev.kosmx.player-anim:player-animation-lib-neoforge:${rootProject.player_animator_version}")
+    modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${rootProject.player_animator_version}")
 }
 
 loom {
