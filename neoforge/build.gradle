@@ -8,6 +8,9 @@ dependencies {
 
     // Player Animator
     modImplementation("dev.kosmx.player-anim:player-animation-lib-forge:${rootProject.player_animator_version}")
+
+    // First-person Model
+    modRuntimeOnly("maven.modrinth:first-person-model:${first_person_model_version}")
 }
 
 loom {
