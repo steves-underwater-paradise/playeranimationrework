@@ -183,6 +183,8 @@ public class AnimationDefinition {
 								.forGetter(AnimationPriorityDefinition::getLegs))
 						.apply(instance, AnimationPriorityDefinition::new));
 
+		private static final int BODY_PART_COUNT = 6;
+
 		private final @NotNull Integer head;
 		private final @NotNull Integer torso;
 		private final @NotNull AnimationTwoPartPriorityDefinition arms;
@@ -221,6 +223,13 @@ public class AnimationDefinition {
 		 */
 		public @NotNull AnimationTwoPartPriorityDefinition getLegs() {
 			return legs;
+		}
+
+		/**
+		 * @return The average animation priority of all body parts.
+		 */
+		public int getAverage() {
+			return (getHead() + getTorso() + getArms().getRight() + getArms().getLeft() + getLegs().getRight() + getLegs().getLeft()) / BODY_PART_COUNT;
 		}
 
 		public static class AnimationTwoPartPriorityDefinition {
