@@ -7,8 +7,8 @@
   },
   "interpolation": {
     "type": "INOUTSINE",
-    "length_in": 0.0,
-    "length_out": 0.0
+    "length_in": 0.05,
+    "length_out": 0.05
   },
   "priority": {
     "head": 1000,
