@@ -12,6 +12,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -20,8 +21,12 @@ import net.minecraft.world.World;
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isIdle = false;
-	private boolean playeranimationrework$isWalking = false;
-	private boolean playeranimationrework$isRunning = false;
+	@Unique private boolean playeranimationrework$isWalking = false;
+	@Unique private boolean playeranimationrework$isRunning = false;
+	// TODO: Fix fence event stop handlers not being called when going off a fence
+	@Unique private boolean playeranimationrework$isFenceIdle = false;
+	@Unique private boolean playeranimationrework$isFenceWalking = false;
+	@Unique private boolean playeranimationrework$isFenceRunning = false;
 
 	public PlayerEntityMixin(EntityType<? extends LivingEntity> type, World world) {
 		super(type, world);
@@ -51,7 +56,21 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isWalking = false;
 			}
-			if (!playeranimationrework$isIdle) {
+			if (playeranimationrework$isFenceRunning && !this.isSprinting()) {
+				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceRunning = false;
+			}
+			if (playeranimationrework$isFenceWalking && !this.isSprinting()) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceWalking = false;
+			}
+
+			if (playeranimationrework$isOnFence()) {
+				if (!playeranimationrework$isFenceIdle) {
+					PARPlayerEvents.FENCE_IDLE_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceIdle = true;
+				}
+			} else if (!playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isIdle = true;
 			}
@@ -59,42 +78,74 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	}
 
 	@Inject(method = "travel", at = @At(value = "TAIL"))
-	private void playerAnimationRework$invokePlayerStartMovementEvents(Vec3d movementInput, CallbackInfo ci) {
+	private void playeranimationrework$invokePlayerStartMovementEvents(Vec3d movementInput, CallbackInfo ci) {
 		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity)) {
 			return;
 		}
 
 		if (!MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
 			if (!playeranimationrework$isRunning && this.isSprinting()) {
-				PARPlayerEvents.RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-				playeranimationrework$isRunning = true;
+				if (playeranimationrework$isOnFence()) {
+					PARPlayerEvents.FENCE_RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceRunning = true;
+				} else {
+					PARPlayerEvents.RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isRunning = true;
+				}
 
 				if (playeranimationrework$isWalking) {
 					PARPlayerEvents.WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isWalking = false;
 				}
 
-				if (playeranimationrework$isIdle) {
+				if (playeranimationrework$isOnFence()) {
+					if (playeranimationrework$isFenceIdle) {
+						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+						playeranimationrework$isFenceIdle = false;
+					}
+				} else if (playeranimationrework$isIdle) {
 					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isIdle = false;
 				}
 			} else if (!playeranimationrework$isWalking) {
-				PARPlayerEvents.WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-				playeranimationrework$isWalking = true;
+				if (playeranimationrework$isOnFence()) {
+					PARPlayerEvents.FENCE_WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceWalking = true;
+				} else {
+					PARPlayerEvents.WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isWalking = true;
+				}
 
 				if (playeranimationrework$isRunning) {
 					PARPlayerEvents.RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isRunning = false;
 				}
 
-				if (playeranimationrework$isIdle) {
+				if (playeranimationrework$isOnFence()) {
+					if (playeranimationrework$isFenceIdle) {
+						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+						playeranimationrework$isFenceIdle = false;
+					}
+				} else if (playeranimationrework$isIdle) {
 					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isIdle = false;
 				}
-			} else if (playeranimationrework$isIdle) {
-				PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-				playeranimationrework$isIdle = false;
+			} else {
+				if (playeranimationrework$isOnFence()) {
+					if (playeranimationrework$isFenceIdle) {
+						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+						playeranimationrework$isFenceIdle = false;
+					}
+				} else if (playeranimationrework$isIdle) {
+					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isIdle = false;
+				}
 			}
 		}
+	}
+
+	@Unique
+	private boolean playeranimationrework$isOnFence() {
+		return this.getWorld().getBlockState(this.getBlockPos().down()).isIn(BlockTags.FENCES);
 	}
 }

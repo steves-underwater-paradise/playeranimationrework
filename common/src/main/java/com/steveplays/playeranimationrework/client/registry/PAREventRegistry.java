@@ -21,6 +21,12 @@ public class PAREventRegistry {
 			put(Identifier.of(MOD_ID, "walk_stop"), PARPlayerEvents.WALK_STOP);
 			put(Identifier.of(MOD_ID, "run_start"), PARPlayerEvents.RUN_START);
 			put(Identifier.of(MOD_ID, "run_stop"), PARPlayerEvents.RUN_STOP);
+			put(Identifier.of(MOD_ID, "fence_idle_start"), PARPlayerEvents.FENCE_IDLE_START);
+			put(Identifier.of(MOD_ID, "fence_idle_stop"), PARPlayerEvents.FENCE_IDLE_STOP);
+			put(Identifier.of(MOD_ID, "fence_walk_start"), PARPlayerEvents.FENCE_WALK_START);
+			put(Identifier.of(MOD_ID, "fence_walk_stop"), PARPlayerEvents.FENCE_WALK_STOP);
+			put(Identifier.of(MOD_ID, "fence_run_start"), PARPlayerEvents.FENCE_RUN_START);
+			put(Identifier.of(MOD_ID, "fence_run_stop"), PARPlayerEvents.FENCE_RUN_STOP);
 		}
 	};
 }

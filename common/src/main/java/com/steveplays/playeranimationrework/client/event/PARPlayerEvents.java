@@ -20,6 +20,12 @@ public interface PARPlayerEvents {
 	Event<ClientPlayerEvent> WALK_STOP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> RUN_START = EventFactory.createLoop();
 	Event<ClientPlayerEvent> RUN_STOP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_IDLE_START = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_IDLE_STOP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_WALK_START = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_WALK_STOP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_RUN_START = EventFactory.createLoop();
+	Event<ClientPlayerEvent> FENCE_RUN_STOP = EventFactory.createLoop();
 
 	@FunctionalInterface
 	interface AfterAnimationEvent {

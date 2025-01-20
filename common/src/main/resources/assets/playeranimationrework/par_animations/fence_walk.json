@@ -1,0 +1,25 @@
+{
+  "identifier": "playeranimationrework:fence_walk",
+  "trigger": {
+    "type": "while",
+    "identifier": "playeranimationrework:fence_walk",
+    "loop": true
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.1,
+    "length_out": 0.25
+  },
+  "priority": {
+    "head": 900,
+    "torso": 900,
+    "arms": {
+      "right_arm": 900,
+      "left_arm": 900
+    },
+    "legs": {
+      "right_leg": 900,
+      "left_leg": 900
+    }
+  }
+}
