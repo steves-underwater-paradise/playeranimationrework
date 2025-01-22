@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:switch_to_item_on_back_right_arm",
+  "trigger": {
+    "type": "when",
+    "identifier": "playeranimationrework:switch_to_item_on_back_right_arm",
+    "loop": true
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.1,
+    "length_out": 0.25
+  },
+  "priority": {
+    "layer": 200
+  }
+}

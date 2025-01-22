@@ -1,18 +1,23 @@
 package com.steveplays.playeranimationrework.mixin.client;
 
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
+import com.steveplays.playeranimationrework.tag.PARTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -22,6 +27,8 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
+	@Shadow private ItemStack selectedItem;
+
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
@@ -62,6 +69,21 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		PARPlayerEvents.JUMP.invoker().onExecute(clientPlayer);
+	}
+
+	@Inject(method = "tick", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;copy()Lnet/minecraft/item/ItemStack;", shift = Shift.BEFORE))
+	private void playeranimationrework$invokeItemSwitchEvents(CallbackInfo ci) {
+		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
+			return;
+		}
+
+		// TODO: Add left arm support
+		@NotNull var mainHandStack = clientPlayer.getMainHandStack();
+		if (mainHandStack.isIn(PARTags.IS_ON_BACK)) {
+			PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.invoker().onExecute(clientPlayer);
+		} else {
+			// TODO: Invoke PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM
+		}
 	}
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))

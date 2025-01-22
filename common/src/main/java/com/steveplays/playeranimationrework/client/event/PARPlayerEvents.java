@@ -12,6 +12,7 @@ public interface PARPlayerEvents {
 	// when type animations
 	Event<ClientPlayerEvent> JUMP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> PUNCH = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM = EventFactory.createLoop();
 
 	// while type animations
 	Event<ClientPlayerEvent> IDLE_START = EventFactory.createLoop();
