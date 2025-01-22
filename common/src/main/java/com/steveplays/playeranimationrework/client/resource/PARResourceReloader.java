@@ -174,16 +174,16 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 				keyframeAnimationPlayer.getPart("torso").part.setEnabled(false);
 			}
 			if (otherAnimationPriorityDefinition.getArms().getRight() < animationPriorityDefinition.getArms().getRight()) {
-				keyframeAnimationPlayer.getPart("right_arm").part.setEnabled(false);
+				keyframeAnimationPlayer.getPart("rightArm").part.setEnabled(false);
 			}
 			if (otherAnimationPriorityDefinition.getArms().getLeft() < animationPriorityDefinition.getArms().getLeft()) {
-				keyframeAnimationPlayer.getPart("left_arm").part.setEnabled(false);
+				keyframeAnimationPlayer.getPart("leftArm").part.setEnabled(false);
 			}
 			if (otherAnimationPriorityDefinition.getLegs().getRight() < animationPriorityDefinition.getLegs().getRight()) {
-				keyframeAnimationPlayer.getPart("right_leg").part.setEnabled(false);
+				keyframeAnimationPlayer.getPart("rightLeg").part.setEnabled(false);
 			}
 			if (otherAnimationPriorityDefinition.getLegs().getLeft() < animationPriorityDefinition.getLegs().getLeft()) {
-				keyframeAnimationPlayer.getPart("left_leg").part.setEnabled(false);
+				keyframeAnimationPlayer.getPart("leftLeg").part.setEnabled(false);
 			}
 		}
 
