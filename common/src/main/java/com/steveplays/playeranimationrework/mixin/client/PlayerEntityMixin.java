@@ -23,7 +23,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
-	// TODO: Fix fence event stop handlers not being called when going off a fence
 	@Unique private boolean playeranimationrework$isFenceIdle = false;
 	@Unique private boolean playeranimationrework$isFenceWalking = false;
 	@Unique private boolean playeranimationrework$isFenceRunning = false;
@@ -48,31 +47,31 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		if (MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
-			if (playeranimationrework$isRunning && !this.isSprinting()) {
-				PARPlayerEvents.RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-				playeranimationrework$isRunning = false;
-			}
 			if (playeranimationrework$isWalking) {
 				PARPlayerEvents.WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isWalking = false;
+			}
+			if (playeranimationrework$isFenceWalking) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceWalking = false;
+			}
+
+			if (playeranimationrework$isRunning && !this.isSprinting()) {
+				PARPlayerEvents.RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isRunning = false;
 			}
 			if (playeranimationrework$isFenceRunning && !this.isSprinting()) {
 				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isFenceRunning = false;
 			}
-			if (playeranimationrework$isFenceWalking && !this.isSprinting()) {
-				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-				playeranimationrework$isFenceWalking = false;
-			}
 
-			if (playeranimationrework$isOnFence()) {
-				if (!playeranimationrework$isFenceIdle) {
-					PARPlayerEvents.FENCE_IDLE_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isFenceIdle = true;
-				}
-			} else if (!playeranimationrework$isIdle) {
+			if (!playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 				playeranimationrework$isIdle = true;
+			}
+			if (!playeranimationrework$isFenceIdle && playeranimationrework$isOnFence()) {
+				PARPlayerEvents.FENCE_IDLE_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceIdle = true;
 			}
 		}
 	}
@@ -84,62 +83,66 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		if (!MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
-			if (!playeranimationrework$isRunning && this.isSprinting()) {
-				if (playeranimationrework$isOnFence()) {
-					PARPlayerEvents.FENCE_RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isFenceRunning = true;
-				} else {
+			if (this.isSprinting()) {
+				if (!playeranimationrework$isRunning) {
 					PARPlayerEvents.RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isRunning = true;
+				}
+				if (!playeranimationrework$isFenceRunning && playeranimationrework$isOnFence()) {
+					PARPlayerEvents.FENCE_RUN_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceRunning = true;
 				}
 
 				if (playeranimationrework$isWalking) {
 					PARPlayerEvents.WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isWalking = false;
 				}
-
-				if (playeranimationrework$isOnFence()) {
-					if (playeranimationrework$isFenceIdle) {
-						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-						playeranimationrework$isFenceIdle = false;
-					}
-				} else if (playeranimationrework$isIdle) {
-					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isIdle = false;
+				if (playeranimationrework$isFenceWalking) {
+					PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceWalking = false;
 				}
-			} else if (!playeranimationrework$isWalking) {
-				if (playeranimationrework$isOnFence()) {
-					PARPlayerEvents.FENCE_WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isFenceWalking = true;
-				} else {
+			} else {
+				if (!playeranimationrework$isWalking) {
 					PARPlayerEvents.WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isWalking = true;
+				}
+				if (!playeranimationrework$isFenceWalking && playeranimationrework$isOnFence()) {
+					PARPlayerEvents.FENCE_WALK_START.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceWalking = true;
 				}
 
 				if (playeranimationrework$isRunning) {
 					PARPlayerEvents.RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
 					playeranimationrework$isRunning = false;
 				}
+				if (playeranimationrework$isFenceRunning) {
+					PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+					playeranimationrework$isFenceRunning = false;
+				}
+			}
 
-				if (playeranimationrework$isOnFence()) {
-					if (playeranimationrework$isFenceIdle) {
-						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-						playeranimationrework$isFenceIdle = false;
-					}
-				} else if (playeranimationrework$isIdle) {
-					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isIdle = false;
-				}
-			} else {
-				if (playeranimationrework$isOnFence()) {
-					if (playeranimationrework$isFenceIdle) {
-						PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-						playeranimationrework$isFenceIdle = false;
-					}
-				} else if (playeranimationrework$isIdle) {
-					PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
-					playeranimationrework$isIdle = false;
-				}
+			if (playeranimationrework$isIdle) {
+				PARPlayerEvents.IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isIdle = false;
+			}
+			if (playeranimationrework$isFenceIdle) {
+				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceIdle = false;
+			}
+		}
+
+		if (!playeranimationrework$isOnFence()) {
+			if (playeranimationrework$isFenceWalking) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceWalking = false;
+			}
+			if (playeranimationrework$isFenceRunning) {
+				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceRunning = false;
+			}
+			if (playeranimationrework$isFenceIdle) {
+				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute((AbstractClientPlayerEntity) (Object) this);
+				playeranimationrework$isFenceIdle = false;
 			}
 		}
 	}

@@ -111,7 +111,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -126,7 +126,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -150,7 +150,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -159,10 +159,10 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 		}
 	}
 
-	private static @NotNull KeyframeAnimationPlayer disableAnimationBodyPartsBasedOnPriority(@NotNull AnimationPriorityDefinition animationPriorityDefinition,
-			@NotNull KeyframeAnimationPlayer keyframeAnimationPlayer) {
+	private static @NotNull KeyframeAnimationPlayer disableAnimationBodyPartsBasedOnPriority(@NotNull Identifier animationTriggerIdentifier,
+			@NotNull AnimationPriorityDefinition animationPriorityDefinition, @NotNull KeyframeAnimationPlayer keyframeAnimationPlayer) {
 		for (var otherAnimation : PARAnimationRegistry.ANIMATION_REGISTRY.entrySet()) {
-			if (otherAnimation == null) {
+			if (otherAnimation == null || otherAnimation.getKey() == animationTriggerIdentifier) {
 				continue;
 			}
 
