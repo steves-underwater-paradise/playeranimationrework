@@ -120,7 +120,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 				for (var triggerIdentifier : animationTriggerDefinition.getIdentifiers()) {
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier.withSuffixedPath(START_SUFFIX)).register(clientPlayer -> {
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
-								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationIdentifier);
+								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || playerAnimationLayer.isActive()) {
 							return;
 						}
@@ -132,7 +132,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 					});
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier.withSuffixedPath(STOP_SUFFIX)).register(clientPlayer -> {
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
-								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationIdentifier);
+								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || !playerAnimationLayer.isActive()) {
 							return;
 						}
@@ -144,7 +144,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 				for (var triggerIdentifier : animationTriggerDefinition.getIdentifiers()) {
 					PARPlayerEvents.AFTER_ANIMATION.register((clientPlayer, previousAnimation) -> {
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
-								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationIdentifier);
+								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || !previousAnimation.getIdentifier().equals(triggerIdentifier)) {
 							return;
 						}
