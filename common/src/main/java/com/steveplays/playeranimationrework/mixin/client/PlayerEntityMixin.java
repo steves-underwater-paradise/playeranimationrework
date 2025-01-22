@@ -79,7 +79,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 		// TODO: Add left arm support
 		@NotNull var mainHandStack = clientPlayer.getMainHandStack();
-		if (mainHandStack.isIn(PARTags.IS_ON_BACK)) {
+		if (mainHandStack.isIn(PARTags.IS_ON_BACK) || this.selectedItem.isIn(PARTags.IS_ON_BACK)) {
 			PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.invoker().onExecute(clientPlayer);
 		} else {
 			// TODO: Invoke PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM
