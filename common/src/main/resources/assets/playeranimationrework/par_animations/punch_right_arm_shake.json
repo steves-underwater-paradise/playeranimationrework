@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:punch_right_arm_shake",
+  "trigger": {
+    "type": "when",
+    "identifier": "playeranimationrework:punch",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.05,
+    "length_out": 0.05
+  },
+  "priority": {
+    "layer": 950
+  }
+}
