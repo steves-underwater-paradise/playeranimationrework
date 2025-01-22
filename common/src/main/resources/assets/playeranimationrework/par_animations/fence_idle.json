@@ -11,15 +11,16 @@
     "length_out": 0.25
   },
   "priority": {
-    "head": 1500,
-    "torso": 1500,
+    "layer": 500,
+    "head": 500,
+    "torso": 500,
     "arms": {
-      "right_arm": 1500,
-      "left_arm": 1500
+      "right_arm": 500,
+      "left_arm": 500
     },
     "legs": {
-      "right_leg": 1500,
-      "left_leg": 1500
+      "right_leg": 500,
+      "left_leg": 500
     }
   }
 }

@@ -15,7 +15,7 @@ public class AnimationDefinition {
 	private static final int DEFAULT_PRIORITY = 1000;
 
 	public static final AnimationDefinition DEFAULT = new AnimationDefinition(Identifier.of(MOD_ID, "none"), new AnimationTriggerDefinition("when", Either.left(Identifier.of(MOD_ID, "idle")), false),
-			new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY,
+			new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f), new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY, DEFAULT_PRIORITY,
 					new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY), new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)));
 	public static final Codec<AnimationDefinition> CODEC = RecordCodecBuilder.create(instance -> instance
 			.group(Identifier.CODEC.fieldOf("identifier").forGetter(AnimationDefinition::getIdentifier),
@@ -23,7 +23,7 @@ public class AnimationDefinition {
 					AnimationInterpolationDefinition.CODEC.optionalFieldOf("interpolation", new AnimationInterpolationDefinition("INOUTSINE", 0.5f, 0.5f))
 							.forGetter(AnimationDefinition::getAnimationInterpolationDefinition),
 					AnimationPriorityDefinition.CODEC.optionalFieldOf("priority",
-							new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY, new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY),
+							new AnimationPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY, DEFAULT_PRIORITY, new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY),
 									new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY)))
 							.forGetter(AnimationDefinition::getAnimationPriorityDefinition))
 			.apply(instance, AnimationDefinition::new));
@@ -175,7 +175,8 @@ public class AnimationDefinition {
 
 	public static class AnimationPriorityDefinition {
 		public static final Codec<AnimationPriorityDefinition> CODEC =
-				RecordCodecBuilder.create(instance -> instance.group(Codec.INT.optionalFieldOf("head", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getHead),
+				RecordCodecBuilder.create(instance -> instance.group(Codec.INT.optionalFieldOf("layer", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getLayer),
+						Codec.INT.optionalFieldOf("head", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getHead),
 						Codec.INT.optionalFieldOf("torso", DEFAULT_PRIORITY).forGetter(AnimationPriorityDefinition::getTorso),
 						AnimationTwoPartPriorityDefinition.CODEC.optionalFieldOf("arms", new AnimationTwoPartPriorityDefinition(DEFAULT_PRIORITY, DEFAULT_PRIORITY))
 								.forGetter(AnimationPriorityDefinition::getArms),
@@ -183,18 +184,26 @@ public class AnimationDefinition {
 								.forGetter(AnimationPriorityDefinition::getLegs))
 						.apply(instance, AnimationPriorityDefinition::new));
 
-		private static final int BODY_PART_COUNT = 6;
-
+		private final @NotNull Integer layer;
 		private final @NotNull Integer head;
 		private final @NotNull Integer torso;
 		private final @NotNull AnimationTwoPartPriorityDefinition arms;
 		private final @NotNull AnimationTwoPartPriorityDefinition legs;
 
-		public AnimationPriorityDefinition(@NotNull Integer head, @NotNull Integer torso, @NotNull AnimationTwoPartPriorityDefinition arms, @NotNull AnimationTwoPartPriorityDefinition legs) {
+		public AnimationPriorityDefinition(@NotNull Integer layer, @NotNull Integer head, @NotNull Integer torso, @NotNull AnimationTwoPartPriorityDefinition arms,
+				@NotNull AnimationTwoPartPriorityDefinition legs) {
+			this.layer = layer;
 			this.head = head;
 			this.torso = torso;
 			this.arms = arms;
 			this.legs = legs;
+		}
+
+		/**
+		 * @return The animation priority of the animation layer.
+		 */
+		public @NotNull Integer getLayer() {
+			return layer;
 		}
 
 		/**
@@ -223,13 +232,6 @@ public class AnimationDefinition {
 		 */
 		public @NotNull AnimationTwoPartPriorityDefinition getLegs() {
 			return legs;
-		}
-
-		/**
-		 * @return The average animation priority of all body parts.
-		 */
-		public int getAverage() {
-			return (getHead() + getTorso() + getArms().getRight() + getArms().getLeft() + getLegs().getRight() + getLegs().getLeft()) / BODY_PART_COUNT;
 		}
 
 		public static class AnimationTwoPartPriorityDefinition {

@@ -90,7 +90,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			@NotNull var animationTriggerIdentifier = animation.getKey();
 			@NotNull var animationDefinition = animation.getValue();
 			@NotNull var animationPriorityDefinition = animationDefinition.getAnimationPriorityDefinition();
-			PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(animationTriggerIdentifier, animationPriorityDefinition.getAverage(), clientPlayer -> {
+			PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(animationTriggerIdentifier, Integer.MAX_VALUE - animationPriorityDefinition.getLayer(), clientPlayer -> {
 				return new ModifierLayer<>();
 			});
 
