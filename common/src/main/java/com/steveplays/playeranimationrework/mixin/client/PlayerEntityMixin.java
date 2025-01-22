@@ -1,6 +1,5 @@
 package com.steveplays.playeranimationrework.mixin.client;
 
-import static com.steveplays.playeranimationrework.PlayerAnimationRework.LOGGER;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -70,9 +69,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
 			return;
 		}
-
-		LOGGER.info("normal: {}, {}, {}, fence: {}, {}, {}", playeranimationrework$isIdle, playeranimationrework$isWalking, playeranimationrework$isRunning, playeranimationrework$isFenceIdle,
-				playeranimationrework$isFenceWalking, playeranimationrework$isFenceRunning);
 
 		// Check if the player is idle
 		if (MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
