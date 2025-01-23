@@ -15,6 +15,7 @@ public interface PARPlayerEvents {
 	Event<ClientPlayerEvent> LAND_LONG_DISTANCE = EventFactory.createLoop();
 	Event<ClientPlayerEvent> PUNCH = EventFactory.createLoop();
 	Event<ClientPlayerEvent> SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM = EventFactory.createLoop();
 
 	// while type animations
 	Event<ClientPlayerEvent> IDLE_START = EventFactory.createLoop();

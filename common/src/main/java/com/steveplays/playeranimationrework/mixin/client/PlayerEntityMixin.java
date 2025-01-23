@@ -82,7 +82,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		if (mainHandStack.isIn(PARTags.IS_ON_BACK) || this.selectedItem.isIn(PARTags.IS_ON_BACK)) {
 			PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.invoker().onExecute(clientPlayer);
 		} else {
-			// TODO: Invoke PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM
+			PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.invoker().onExecute(clientPlayer);
 		}
 	}
 
