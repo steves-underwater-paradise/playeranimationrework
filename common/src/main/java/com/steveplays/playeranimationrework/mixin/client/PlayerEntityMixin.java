@@ -10,12 +10,14 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
+import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil;
 import com.steveplays.playeranimationrework.tag.PARTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BlockTags;
@@ -181,6 +183,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute(clientPlayer);
 			}
 		}
+	}
+
+	@Inject(method = "onDeath", at = @At(value = "TAIL"))
+	private void playeranimationrework$stopAllAnimationsOnDeath(DamageSource damageSource, CallbackInfo ci) {
+		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
+			return;
+		}
+
+		PlayerAnimationUtil.stopAllAnimations(clientPlayer);
 	}
 
 	@Unique

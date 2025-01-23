@@ -12,6 +12,7 @@ import com.steveplays.playeranimationrework.client.api.AnimationDefinition.Anima
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
 import com.steveplays.playeranimationrework.client.registry.PARAnimationRegistry;
 import com.steveplays.playeranimationrework.client.registry.PAREventRegistry;
+import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -27,6 +28,8 @@ import net.minecraft.resource.SinglePreparationResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 import static com.steveplays.playeranimationrework.PlayerAnimationRework.TICKS_PER_SECOND;
+import static com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil.START_SUFFIX;
+import static com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil.STOP_SUFFIX;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,8 +39,6 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 	private static final @NotNull Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
 	private static final @NotNull String JSON_FILE_SUFFIX = ".json";
 	private static final @NotNull String ANIMATION_DEFINITIONS_FOLDER_NAME = "par_animations";
-	private static final @NotNull String START_SUFFIX = "_start";
-	private static final @NotNull String STOP_SUFFIX = "_stop";
 
 	/**
 	 * The preparation stage, ran on worker threads.
@@ -104,6 +105,10 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			if (animationTriggerType == Type.WHEN) {
 				for (var triggerIdentifier : animationTriggerDefinition.getIdentifiers()) {
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier).register(clientPlayer -> {
+						if (!PlayerAnimationUtil.shouldAnimatePlayer(clientPlayer)) {
+							return;
+						}
+
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null) {
@@ -119,6 +124,10 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			} else if (animationTriggerType == Type.WHILE) {
 				for (var triggerIdentifier : animationTriggerDefinition.getIdentifiers()) {
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier.withSuffixedPath(START_SUFFIX)).register(clientPlayer -> {
+						if (!PlayerAnimationUtil.shouldAnimatePlayer(clientPlayer)) {
+							return;
+						}
+
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || playerAnimationLayer.isActive()) {
@@ -131,6 +140,10 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
 					PAREventRegistry.EVENT_REGISTRY.get(triggerIdentifier.withSuffixedPath(STOP_SUFFIX)).register(clientPlayer -> {
+						if (!PlayerAnimationUtil.shouldAnimatePlayer(clientPlayer)) {
+							return;
+						}
+
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || !playerAnimationLayer.isActive()) {
@@ -143,6 +156,10 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 			} else if (animationTriggerType == Type.AFTER) {
 				for (var triggerIdentifier : animationTriggerDefinition.getIdentifiers()) {
 					PARPlayerEvents.AFTER_ANIMATION.register((clientPlayer, previousAnimation) -> {
+						if (!PlayerAnimationUtil.shouldAnimatePlayer(clientPlayer)) {
+							return;
+						}
+
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
 						if (playerAnimationLayer == null || !previousAnimation.getIdentifier().equals(triggerIdentifier)) {
