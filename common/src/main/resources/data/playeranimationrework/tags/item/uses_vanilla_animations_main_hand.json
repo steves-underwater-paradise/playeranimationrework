@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "#c:tools/bow",
+    "#c:tools/crossbow",
+    "#c:tools/spear"
+  ]
+}

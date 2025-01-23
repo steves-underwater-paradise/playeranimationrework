@@ -116,7 +116,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyParts(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -135,7 +135,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyParts(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -168,7 +168,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 						}
 
 						@NotNull var keyframeAnimationPlayer = new KeyframeAnimationPlayer((KeyframeAnimation) PlayerAnimationRegistry.getAnimation(animationIdentifier), 0, true);
-						keyframeAnimationPlayer = disableAnimationBodyPartsBasedOnPriority(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
+						keyframeAnimationPlayer = disableAnimationBodyParts(animationTriggerIdentifier, animationPriorityDefinition, keyframeAnimationPlayer);
 
 						playerAnimationLayer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(interpolationLengthInSeconds, interpolationEaseType), keyframeAnimationPlayer, true);
 					});
@@ -177,30 +177,33 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 		}
 	}
 
-	private static @NotNull KeyframeAnimationPlayer disableAnimationBodyPartsBasedOnPriority(@NotNull Identifier animationTriggerIdentifier,
-			@NotNull AnimationPriorityDefinition animationPriorityDefinition, @NotNull KeyframeAnimationPlayer keyframeAnimationPlayer) {
+	private static @NotNull KeyframeAnimationPlayer disableAnimationBodyParts(@NotNull Identifier animationTriggerIdentifier, @NotNull AnimationPriorityDefinition animationPriorityDefinition,
+			@NotNull KeyframeAnimationPlayer keyframeAnimationPlayer) {
 		for (var otherAnimation : PARAnimationRegistry.ANIMATION_REGISTRY.entrySet()) {
 			if (otherAnimation == null || otherAnimation.getKey() == animationTriggerIdentifier) {
 				continue;
 			}
 
 			@NotNull var otherAnimationPriorityDefinition = otherAnimation.getValue().getAnimationPriorityDefinition();
-			if (otherAnimationPriorityDefinition.getHead() < animationPriorityDefinition.getHead()) {
+			if (PARAnimationRegistry.ENABLED_BODY_PARTS.get("body")) {
+				keyframeAnimationPlayer.getPart("body").part.setEnabled(false);
+			}
+			if (otherAnimationPriorityDefinition.getHead() < animationPriorityDefinition.getHead() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("head")) {
 				keyframeAnimationPlayer.getPart("head").part.setEnabled(false);
 			}
-			if (otherAnimationPriorityDefinition.getTorso() < animationPriorityDefinition.getTorso()) {
+			if (otherAnimationPriorityDefinition.getTorso() < animationPriorityDefinition.getTorso() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("torso")) {
 				keyframeAnimationPlayer.getPart("torso").part.setEnabled(false);
 			}
-			if (otherAnimationPriorityDefinition.getArms().getRight() < animationPriorityDefinition.getArms().getRight()) {
+			if (otherAnimationPriorityDefinition.getArms().getRight() < animationPriorityDefinition.getArms().getRight() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("rightArm")) {
 				keyframeAnimationPlayer.getPart("rightArm").part.setEnabled(false);
 			}
-			if (otherAnimationPriorityDefinition.getArms().getLeft() < animationPriorityDefinition.getArms().getLeft()) {
+			if (otherAnimationPriorityDefinition.getArms().getLeft() < animationPriorityDefinition.getArms().getLeft() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("leftArm")) {
 				keyframeAnimationPlayer.getPart("leftArm").part.setEnabled(false);
 			}
-			if (otherAnimationPriorityDefinition.getLegs().getRight() < animationPriorityDefinition.getLegs().getRight()) {
+			if (otherAnimationPriorityDefinition.getLegs().getRight() < animationPriorityDefinition.getLegs().getRight() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("rightLeg")) {
 				keyframeAnimationPlayer.getPart("rightLeg").part.setEnabled(false);
 			}
-			if (otherAnimationPriorityDefinition.getLegs().getLeft() < animationPriorityDefinition.getLegs().getLeft()) {
+			if (otherAnimationPriorityDefinition.getLegs().getLeft() < animationPriorityDefinition.getLegs().getLeft() || !PARAnimationRegistry.ENABLED_BODY_PARTS.get("leftLeg")) {
 				keyframeAnimationPlayer.getPart("leftLeg").part.setEnabled(false);
 			}
 		}

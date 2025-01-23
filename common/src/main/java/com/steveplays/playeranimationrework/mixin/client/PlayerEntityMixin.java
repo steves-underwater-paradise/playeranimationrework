@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.mojang.authlib.GameProfile;
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
+import com.steveplays.playeranimationrework.client.registry.PARAnimationRegistry;
 import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil;
 import com.steveplays.playeranimationrework.tag.PARTags;
 import net.fabricmc.api.EnvType;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import static com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil.BodyParts;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PlayerEntity.class)
@@ -48,6 +50,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			return;
 		}
 
+		// Register switch to item event handlers
+		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(this::playeranimationrework$toggleVanillaArmAnimations);
+		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(this::playeranimationrework$toggleVanillaArmAnimations);
 		// Register movement event handlers
 		PARPlayerEvents.IDLE_START.register(clientPlayer -> playeranimationrework$isIdle = true);
 		PARPlayerEvents.IDLE_STOP.register(clientPlayer -> playeranimationrework$isIdle = false);
@@ -197,5 +202,20 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique
 	private boolean playeranimationrework$isOnFence() {
 		return this.getWorld().getBlockState(this.getBlockPos().down()).isIn(BlockTags.FENCES);
+	}
+
+	@Unique
+	private void playeranimationrework$toggleVanillaArmAnimations(@NotNull AbstractClientPlayerEntity clientPlayer) {
+		@NotNull var mainHandStack = clientPlayer.getMainHandStack();
+		if (mainHandStack.isIn(PARTags.USES_VANILLA_ANIMATIONS_MAIN_HAND)) {
+			PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.RIGHT_ARM, false);
+		} else if (!PARAnimationRegistry.ENABLED_BODY_PARTS.get(BodyParts.RIGHT_ARM)) {
+			PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.RIGHT_ARM, true);
+		}
+		if (mainHandStack.isIn(PARTags.USES_VANILLA_ANIMATIONS_OFF_HAND)) {
+			PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.LEFT_ARM, false);
+		} else if (!PARAnimationRegistry.ENABLED_BODY_PARTS.get(BodyParts.LEFT_ARM)) {
+			PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.LEFT_ARM, true);
+		}
 	}
 }
