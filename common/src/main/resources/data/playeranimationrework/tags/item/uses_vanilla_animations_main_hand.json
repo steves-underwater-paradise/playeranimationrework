@@ -3,6 +3,7 @@
   "values": [
     "#c:tools/bow",
     "#c:tools/crossbow",
-    "#c:tools/spear"
+    "#c:tools/spear",
+    "minecraft:spyglass"
   ]
 }
