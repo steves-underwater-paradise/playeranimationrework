@@ -11,6 +11,8 @@ public interface PARPlayerEvents {
 
 	// when type animations
 	Event<ClientPlayerEvent> JUMP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> LAND_SHORT_DISTANCE = EventFactory.createLoop();
+	Event<ClientPlayerEvent> LAND_LONG_DISTANCE = EventFactory.createLoop();
 	Event<ClientPlayerEvent> PUNCH = EventFactory.createLoop();
 	Event<ClientPlayerEvent> SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM = EventFactory.createLoop();
 

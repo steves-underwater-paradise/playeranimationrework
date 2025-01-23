@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:land_long_distance",
+  "trigger": {
+    "type": "when",
+    "identifier": "playeranimationrework:land_long_distance",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.1,
+    "length_out": 1
+  },
+  "priority": {
+    "layer": 400
+  }
+}
