@@ -130,7 +130,7 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
-						if (playerAnimationLayer == null || playerAnimationLayer.getAnimation().isActive()) {
+						if (playerAnimationLayer == null || playerAnimationLayer.getAnimation() != null) {
 							return;
 						}
 
@@ -146,7 +146,8 @@ public class PARResourceReloader extends SinglePreparationResourceReloader<Void>
 
 						@SuppressWarnings("unchecked") @Nullable var playerAnimationLayer =
 								(ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData(clientPlayer).get(animationTriggerIdentifier);
-						if (playerAnimationLayer == null || !playerAnimationLayer.getAnimation().isActive()) {
+						@Nullable var playerAnimation = playerAnimationLayer.getAnimation();
+						if (playerAnimationLayer == null || playerAnimation == null || !playerAnimation.isActive()) {
 							return;
 						}
 
