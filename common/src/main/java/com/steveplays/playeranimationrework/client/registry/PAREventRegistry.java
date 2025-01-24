@@ -15,6 +15,7 @@ public class PAREventRegistry {
 			put(Identifier.of(MOD_ID, "land_short_distance"), PARPlayerEvents.LAND_SHORT_DISTANCE);
 			put(Identifier.of(MOD_ID, "land_long_distance"), PARPlayerEvents.LAND_LONG_DISTANCE);
 			put(Identifier.of(MOD_ID, "punch"), PARPlayerEvents.PUNCH);
+			put(Identifier.of(MOD_ID, "use_igniter"), PARPlayerEvents.USE_IGNITER);
 			put(Identifier.of(MOD_ID, "switch_to_item_on_back_right_arm"), PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM);
 			put(Identifier.of(MOD_ID, "switch_to_item_in_pocket_right_arm"), PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM);
 

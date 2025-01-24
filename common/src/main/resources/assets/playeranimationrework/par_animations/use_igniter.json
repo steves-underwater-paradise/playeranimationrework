@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:use_igniter",
+  "trigger": {
+    "type": "when",
+    "identifier": "playeranimationrework:use_igniter",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.05,
+    "length_out": 0.05
+  },
+  "priority": {
+    "layer": 250
+  }
+}

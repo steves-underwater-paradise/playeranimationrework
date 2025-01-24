@@ -1,5 +1,6 @@
 package com.steveplays.playeranimationrework.mixin.client;
 
+import static com.steveplays.playeranimationrework.PlayerAnimationRework.LOGGER;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -8,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
 import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil;
+import com.steveplays.playeranimationrework.tag.PARTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -42,10 +44,16 @@ public class ClientPlayerEntityMixin {
 			return;
 		}
 
-		PARPlayerEvents.PUNCH.invoker().onExecute((ClientPlayerEntity) (Object) this);
+		@NotNull var clientPlayer = (ClientPlayerEntity) (Object) this;
+		if (clientPlayer.getMainHandStack().isIn(PARTags.Common.IGNITER_TOOLS)) {
+			PARPlayerEvents.USE_IGNITER.invoker().onExecute(clientPlayer);
+		} else {
+			PARPlayerEvents.PUNCH.invoker().onExecute(clientPlayer);
+		}
 	}
 
-	@Inject(method = "onGameModeChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V", shift = At.Shift.BEFORE))
+	@Inject(method = "onGameModeChanged",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;setVelocity(Lnet/minecraft/util/math/Vec3d;)V", shift = At.Shift.BEFORE))
 	private void playeranimationrework$stopAllAnimationsOnEnteringSpectatorMode(@NotNull GameMode gameMode, CallbackInfo ci) {
 		PlayerAnimationUtil.stopAllAnimations((ClientPlayerEntity) (Object) this);
 	}
