@@ -13,6 +13,7 @@
     "client.LivingEntityRendererMixin",
     "client.LivingEntityMixin",
     "client.PlayerEntityMixin",
-    "client.EntityMixin"
+    "client.EntityMixin",
+    "client.ClientPlayerInteractionManagerMixin"
   ]
 }
