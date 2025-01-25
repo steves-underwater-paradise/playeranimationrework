@@ -22,7 +22,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -112,7 +111,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (!playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_START.invoker().onExecute(clientPlayer);
 			}
-			if (!playeranimationrework$isSwimmingIdle && playeranimationrework$isInWater()) {
+			if (!playeranimationrework$isSwimmingIdle && playeranimationrework$isInFluid()) {
 				PARPlayerEvents.SWIM_IDLE_START.invoker().onExecute(clientPlayer);
 			}
 			if (!playeranimationrework$isFenceIdle && playeranimationrework$isOnFence()) {
@@ -152,10 +151,42 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@Inject(method = "travel", at = @At(value = "TAIL"))
 	private void playeranimationrework$invokePlayerStartMovementEvents(Vec3d movementInput, CallbackInfo ci) {
-		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer) || MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
+		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
 			return;
 		}
 
+		// Check if velocity is more than zero
+		if (MathHelper.approximatelyEquals(this.getVelocity().length(), 0d)) {
+			// Handle velocity being more than zero
+			// Check if the player went out of a fluid
+			if (!playeranimationrework$isInFluid()) {
+				// Handle the player going out of a fluid
+				if (playeranimationrework$isSwimmingIdle) {
+					PARPlayerEvents.SWIM_IDLE_STOP.invoker().onExecute(clientPlayer);
+				}
+			}
+
+			// Check if the player has fallen off a fence
+			if (!playeranimationrework$isOnFence()) {
+				// Handle the player falling off a fence
+				if (playeranimationrework$isFenceWalking) {
+					PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
+				}
+				if (playeranimationrework$isFenceRunning) {
+					PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
+				}
+				if (playeranimationrework$isFenceIdle) {
+					PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute(clientPlayer);
+				}
+			}
+		}
+
+		// Check if horizontal velocity is more than zero
+		if (MathHelper.approximatelyEquals(this.getVelocity().horizontalLength(), 0d)) {
+			return;
+		}
+
+		// Handle horizontal velocity being more than zero
 		if (this.isSwimming()) {
 			// Handle the player starting swimming
 			if (!playeranimationrework$isSwimming) {
@@ -212,20 +243,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
 			}
 		}
-
-		// Check if the player has fallen off a fence
-		if (!playeranimationrework$isOnFence()) {
-			// Handle the player falling off a fence
-			if (playeranimationrework$isFenceWalking) {
-				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
-			}
-			if (playeranimationrework$isFenceRunning) {
-				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
-			}
-			if (playeranimationrework$isFenceIdle) {
-				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute(clientPlayer);
-			}
-		}
 	}
 
 	@Inject(method = "onDeath", at = @At(value = "TAIL"))
@@ -243,7 +260,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	}
 
 	@Unique
-	private boolean playeranimationrework$isInWater() {
+	private boolean playeranimationrework$isInFluid() {
 		return !this.getWorld().getFluidState(this.getBlockPos()).isEmpty();
 	}
 
