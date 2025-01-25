@@ -7,8 +7,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
-import com.steveplays.playeranimationrework.tag.PARTags;
+import com.steveplays.playeranimationrework.client.util.ItemUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -24,14 +23,13 @@ import net.minecraft.world.World;
 @Mixin(Item.class)
 public class ItemMixin {
 	@Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;setCurrentHand(Lnet/minecraft/util/Hand;)V"))
-	private void playeranimationrework$invokeItemUseEvents(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir, @Local @NotNull ItemStack itemStack) {
+	private void playeranimationrework$invokeItemUseStartEvents(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir,
+			@Local @NotNull ItemStack itemStack) {
 		if (!(user instanceof AbstractClientPlayerEntity clientPlayer)) {
 			return;
 		}
 
-		if (itemStack.isIn(PARTags.Common.FOODS)) {
-			PARPlayerEvents.EAT_START.invoker().onExecute(clientPlayer);
-		}
+		ItemUtil.invokeItemUseStartEvents(clientPlayer, itemStack);
 	}
 
 	@Inject(method = "finishUsing", at = @At(value = "INVOKE",
@@ -41,9 +39,7 @@ public class ItemMixin {
 			return;
 		}
 
-		if (itemStack.isIn(PARTags.Common.FOODS)) {
-			PARPlayerEvents.EAT_STOP.invoker().onExecute(clientPlayer);
-		}
+		ItemUtil.invokeItemUseStopEvents(clientPlayer, itemStack);
 	}
 
 	@Inject(method = "onStoppedUsing", at = @At(value = "HEAD"))
@@ -52,8 +48,6 @@ public class ItemMixin {
 			return;
 		}
 
-		if (itemStack.isIn(PARTags.Common.FOODS)) {
-			PARPlayerEvents.EAT_STOP.invoker().onExecute(clientPlayer);
-		}
+		ItemUtil.invokeItemUseStopEvents(clientPlayer, itemStack);
 	}
 }

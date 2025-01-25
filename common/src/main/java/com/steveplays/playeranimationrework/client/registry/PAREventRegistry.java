@@ -44,6 +44,10 @@ public class PAREventRegistry {
 			put(Identifier.of(MOD_ID, "fence_run_stop"), PARPlayerEvents.FENCE_RUN_STOP);
 			put(Identifier.of(MOD_ID, "eat_start"), PARPlayerEvents.EAT_START);
 			put(Identifier.of(MOD_ID, "eat_stop"), PARPlayerEvents.EAT_STOP);
+			put(Identifier.of(MOD_ID, "drink_right_arm_start"), PARPlayerEvents.DRINK_RIGHT_ARM_START);
+			put(Identifier.of(MOD_ID, "drink_right_arm_stop"), PARPlayerEvents.DRINK_RIGHT_ARM_STOP);
+			put(Identifier.of(MOD_ID, "drink_left_arm_start"), PARPlayerEvents.DRINK_LEFT_ARM_START);
+			put(Identifier.of(MOD_ID, "drink_left_arm_stop"), PARPlayerEvents.DRINK_LEFT_ARM_STOP);
 		}
 	};
 }

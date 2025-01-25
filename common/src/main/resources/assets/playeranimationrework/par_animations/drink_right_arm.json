@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:drink_right_arm",
+  "trigger": {
+    "type": "while",
+    "identifier": "playeranimationrework:drink_right_arm",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.5,
+    "length_out": 0.5
+  },
+  "priority": {
+    "layer": 200
+  }
+}

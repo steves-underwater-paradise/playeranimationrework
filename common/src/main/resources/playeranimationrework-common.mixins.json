@@ -15,6 +15,7 @@
     "client.PlayerEntityMixin",
     "client.EntityMixin",
     "client.ClientPlayerInteractionManagerMixin",
-    "client.item.ItemMixin"
+    "client.item.ItemMixin",
+    "client.item.BottleItemMixin"
   ]
 }

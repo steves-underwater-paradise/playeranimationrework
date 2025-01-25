@@ -1,0 +1,35 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"drink_right_arm": {
+			"loop": true,
+			"animation_length": 2.5,
+			"bones": {
+				"right_arm": {
+					"rotation": {
+						"0.0": {
+							"vector": [-71.52011, -33.07486, 19.14338],
+							"easing": "easeInOutSine"
+						},
+						"0.5": {
+							"vector": [-86.49047, -35.57448, 19.09083],
+							"easing": "easeInOutSine"
+						},
+						"0.9167": {
+							"vector": [-96.49047, -35.57448, 19.09083],
+							"easing": "easeInOutSine"
+						},
+						"1.9167": {
+							"vector": [-91.49047, -35.57448, 19.09083],
+							"easing": "easeInOutSine"
+						},
+						"2.5": {
+							"vector": [-71.52011, -33.07486, 19.14338],
+							"easing": "easeInOutSine"
+						}
+					}
+				}
+			}
+		}
+	}
+}
