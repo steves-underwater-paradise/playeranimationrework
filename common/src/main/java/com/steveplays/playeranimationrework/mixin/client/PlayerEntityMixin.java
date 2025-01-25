@@ -37,7 +37,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
 	@Unique private boolean playeranimationrework$isSwimmingIdle = false;
-	@Unique private boolean playeranimationrework$isSwimming = false;
+	@Unique private boolean playeranimationrework$isSwimmingSlow = false;
+	@Unique private boolean playeranimationrework$isSwimmingFast = false;
 	@Unique private boolean playeranimationrework$isFenceIdle = false;
 	@Unique private boolean playeranimationrework$isFenceWalking = false;
 	@Unique private boolean playeranimationrework$isFenceRunning = false;
@@ -64,8 +65,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		PARPlayerEvents.RUN_STOP.register(clientPlayer -> playeranimationrework$isRunning = false);
 		PARPlayerEvents.SWIM_IDLE_START.register(clientPlayer -> playeranimationrework$isSwimmingIdle = true);
 		PARPlayerEvents.SWIM_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSwimmingIdle = false);
-		PARPlayerEvents.SWIM_START.register(clientPlayer -> playeranimationrework$isSwimming = true);
-		PARPlayerEvents.SWIM_STOP.register(clientPlayer -> playeranimationrework$isSwimming = false);
+		PARPlayerEvents.SWIM_SLOW_START.register(clientPlayer -> playeranimationrework$isSwimmingSlow = true);
+		PARPlayerEvents.SWIM_SLOW_STOP.register(clientPlayer -> playeranimationrework$isSwimmingSlow = false);
+		PARPlayerEvents.SWIM_FAST_START.register(clientPlayer -> playeranimationrework$isSwimmingFast = true);
+		PARPlayerEvents.SWIM_FAST_STOP.register(clientPlayer -> playeranimationrework$isSwimmingFast = false);
 		// Register fence movement event handlers
 		PARPlayerEvents.FENCE_IDLE_START.register(clientPlayer -> playeranimationrework$isFenceIdle = true);
 		PARPlayerEvents.FENCE_IDLE_STOP.register(clientPlayer -> playeranimationrework$isFenceIdle = false);
@@ -125,8 +128,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
 			}
 
-			if (playeranimationrework$isSwimming) {
-				PARPlayerEvents.SWIM_STOP.invoker().onExecute(clientPlayer);
+			if (playeranimationrework$isSwimmingSlow) {
+				PARPlayerEvents.SWIM_SLOW_STOP.invoker().onExecute(clientPlayer);
+			}
+			if (playeranimationrework$isSwimmingFast) {
+				PARPlayerEvents.SWIM_FAST_STOP.invoker().onExecute(clientPlayer);
 			}
 
 			if (playeranimationrework$isFenceWalking) {
@@ -188,9 +194,30 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 		// Handle horizontal velocity being more than zero
 		if (this.isSwimming()) {
-			// Handle the player starting swimming
-			if (!playeranimationrework$isSwimming) {
-				PARPlayerEvents.SWIM_START.invoker().onExecute(clientPlayer);
+			// Handle the player starting swimming fast
+			if (!playeranimationrework$isSwimmingFast) {
+				PARPlayerEvents.SWIM_FAST_START.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isRunning) {
+				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isWalking) {
+				PARPlayerEvents.WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceWalking) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceRunning) {
+				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+		} else if (playeranimationrework$isInFluid()) {
+			// Handle the player starting swimming slow/wading
+			if (!playeranimationrework$isSwimmingSlow) {
+				PARPlayerEvents.SWIM_SLOW_START.invoker().onExecute(clientPlayer);
 			}
 
 			if (playeranimationrework$isRunning) {

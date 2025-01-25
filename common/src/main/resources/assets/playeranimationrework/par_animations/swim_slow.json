@@ -1,8 +1,8 @@
 {
-  "identifier": "playeranimationrework:swim",
+  "identifier": "playeranimationrework:swim_idle",
   "trigger": {
     "type": "while",
-    "identifier": "playeranimationrework:swim",
+    "identifier": "playeranimationrework:swim_slow",
     "loop": true
   },
   "interpolation": {

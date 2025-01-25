@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:swim",
+  "trigger": {
+    "type": "while",
+    "identifier": "playeranimationrework:swim_fast",
+    "loop": true
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.5,
+    "length_out": 0.75
+  },
+  "priority": {
+    "layer": 900
+  }
+}
