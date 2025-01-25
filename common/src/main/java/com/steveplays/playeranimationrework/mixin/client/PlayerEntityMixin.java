@@ -22,6 +22,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -36,6 +37,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
+	@Unique private boolean playeranimationrework$isSwimmingIdle = false;
 	@Unique private boolean playeranimationrework$isSwimming = false;
 	@Unique private boolean playeranimationrework$isFenceIdle = false;
 	@Unique private boolean playeranimationrework$isFenceWalking = false;
@@ -61,6 +63,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		PARPlayerEvents.WALK_STOP.register(clientPlayer -> playeranimationrework$isWalking = false);
 		PARPlayerEvents.RUN_START.register(clientPlayer -> playeranimationrework$isRunning = true);
 		PARPlayerEvents.RUN_STOP.register(clientPlayer -> playeranimationrework$isRunning = false);
+		PARPlayerEvents.SWIM_IDLE_START.register(clientPlayer -> playeranimationrework$isSwimmingIdle = true);
+		PARPlayerEvents.SWIM_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSwimmingIdle = false);
 		PARPlayerEvents.SWIM_START.register(clientPlayer -> playeranimationrework$isSwimming = true);
 		PARPlayerEvents.SWIM_STOP.register(clientPlayer -> playeranimationrework$isSwimming = false);
 		// Register fence movement event handlers
@@ -108,6 +112,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (!playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_START.invoker().onExecute(clientPlayer);
 			}
+			if (!playeranimationrework$isSwimmingIdle && playeranimationrework$isInWater()) {
+				PARPlayerEvents.SWIM_IDLE_START.invoker().onExecute(clientPlayer);
+			}
 			if (!playeranimationrework$isFenceIdle && playeranimationrework$isOnFence()) {
 				PARPlayerEvents.FENCE_IDLE_START.invoker().onExecute(clientPlayer);
 			}
@@ -133,6 +140,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			// Handle the player unidling
 			if (playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_STOP.invoker().onExecute(clientPlayer);
+			}
+			if (playeranimationrework$isSwimmingIdle) {
+				PARPlayerEvents.SWIM_IDLE_STOP.invoker().onExecute(clientPlayer);
 			}
 			if (playeranimationrework$isFenceIdle) {
 				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute(clientPlayer);
@@ -230,6 +240,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique
 	private boolean playeranimationrework$isOnFence() {
 		return this.getWorld().getBlockState(this.getBlockPos().down()).isIn(BlockTags.FENCES);
+	}
+
+	@Unique
+	private boolean playeranimationrework$isInWater() {
+		return !this.getWorld().getFluidState(this.getBlockPos()).isEmpty();
 	}
 
 	@Unique
