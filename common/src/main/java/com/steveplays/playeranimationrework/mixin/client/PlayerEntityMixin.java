@@ -33,6 +33,11 @@ import static com.steveplays.playeranimationrework.client.util.PlayerAnimationUt
 public abstract class PlayerEntityMixin extends LivingEntity {
 	@Shadow private ItemStack selectedItem;
 
+	// Item use states
+	@Unique private boolean playeranimationrework$isEating = false;
+	@Unique private boolean playeranimationrework$isDrinkingRightArm = false;
+	@Unique private boolean playeranimationrework$isDrinkingLeftArm = false;
+	// Movement states
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
@@ -56,8 +61,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		// Register switch to item event handlers
-		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(this::playeranimationrework$toggleVanillaArmAnimations);
-		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(this::playeranimationrework$toggleVanillaArmAnimations);
+		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
+		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
+		// Register item use event handlers
+		PARPlayerEvents.EAT_START.register(clientPlayer -> playeranimationrework$isEating = true);
+		PARPlayerEvents.EAT_STOP.register(clientPlayer -> playeranimationrework$isEating = false);
+		PARPlayerEvents.DRINK_RIGHT_ARM_START.register(clientPlayer -> playeranimationrework$isDrinkingRightArm = true);
+		PARPlayerEvents.DRINK_RIGHT_ARM_STOP.register(clientPlayer -> playeranimationrework$isDrinkingRightArm = false);
+		PARPlayerEvents.DRINK_LEFT_ARM_START.register(clientPlayer -> playeranimationrework$isDrinkingLeftArm = true);
+		PARPlayerEvents.DRINK_LEFT_ARM_STOP.register(clientPlayer -> playeranimationrework$isDrinkingLeftArm = false);
 		// Register movement event handlers
 		PARPlayerEvents.IDLE_START.register(clientPlayer -> playeranimationrework$isIdle = true);
 		PARPlayerEvents.IDLE_STOP.register(clientPlayer -> playeranimationrework$isIdle = false);
@@ -347,6 +359,21 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique
 	private boolean playeranimationrework$isInFluid() {
 		return !this.getWorld().getFluidState(this.getBlockPos()).isEmpty();
+	}
+
+	@Unique
+	private void playeranimationrework$onSwitchItem(@NotNull AbstractClientPlayerEntity clientPlayer) {
+		if (playeranimationrework$isEating) {
+			PARPlayerEvents.EAT_STOP.invoker().onExecute(clientPlayer);
+		}
+		if (playeranimationrework$isDrinkingRightArm) {
+			PARPlayerEvents.DRINK_RIGHT_ARM_STOP.invoker().onExecute(clientPlayer);
+		}
+		if (playeranimationrework$isDrinkingLeftArm) {
+			PARPlayerEvents.DRINK_LEFT_ARM_STOP.invoker().onExecute(clientPlayer);
+		}
+
+		playeranimationrework$toggleVanillaArmAnimations(clientPlayer);
 	}
 
 	@Unique
