@@ -27,7 +27,7 @@ public class LivingEntityMixin {
 	}
 
 	@Inject(method = "stopRiding", at = @At(value = "HEAD"))
-	private void playeranimationrework$enableLegAnimationsWhenStoppingRiding(CallbackInfo ci) {
+	private void playeranimationrework$enableArmAndLegAnimationsWhenStoppingRiding(CallbackInfo ci) {
 		if (!(((LivingEntity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
 			return;
 		}

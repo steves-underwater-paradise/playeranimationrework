@@ -40,7 +40,7 @@ public class EntityMixin {
 	}
 
 	@Inject(method = "startRiding(Lnet/minecraft/entity/Entity;Z)Z", at = @At(value = "HEAD"))
-	private void playeranimationrework$disableLegAnimationsWhenStartingToRide(Entity entity, boolean force, CallbackInfoReturnable<Boolean> cir) {
+	private void playeranimationrework$disableArmAndLegAnimationsWhenStartingToRide(Entity entity, boolean force, CallbackInfoReturnable<Boolean> cir) {
 		if (!(((Entity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
 			return;
 		}
