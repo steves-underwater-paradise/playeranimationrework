@@ -20,8 +20,10 @@ import net.minecraft.util.hit.BlockHitResult;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerInteractionManager.class)
 public class ClientPlayerInteractionManagerMixin {
-	@Inject(method = "interactBlockInternal", at = @At(value = "INVOKE"))
-	private void playeranimationrework$invokeItemUseEvents(@NotNull ClientPlayerEntity clientPlayer, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir, @Local @NotNull ItemStack itemStack) {
+	@Inject(method = "interactBlockInternal",
+			at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/ItemStack;useOnBlock(Lnet/minecraft/item/ItemUsageContext;)Lnet/minecraft/util/ActionResult;"))
+	private void playeranimationrework$invokeItemUseOnBlockEvents(@NotNull ClientPlayerEntity clientPlayer, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir,
+			@Local @NotNull ItemStack itemStack) {
 		if (itemStack.isIn(PARTags.Common.IGNITER_TOOLS)) {
 			PARPlayerEvents.USE_IGNITER.invoker().onExecute(clientPlayer);
 		}

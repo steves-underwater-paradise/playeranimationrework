@@ -16,5 +16,6 @@ public class PARTags {
 		private static final @NotNull String COMMON_NAMESPACE = "c";
 
 		public static final @NotNull TagKey<Item> IGNITER_TOOLS = TagKey.of(RegistryKeys.ITEM, Identifier.of(COMMON_NAMESPACE, "tools/igniter"));
+		public static final @NotNull TagKey<Item> FOODS = TagKey.of(RegistryKeys.ITEM, Identifier.of(COMMON_NAMESPACE, "foods"));
 	}
 }

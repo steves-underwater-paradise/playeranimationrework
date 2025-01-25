@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:eat",
+  "trigger": {
+    "type": "while",
+    "identifier": "playeranimationrework:eat",
+    "loop": false
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.5,
+    "length_out": 0.5
+  },
+  "priority": {
+    "layer": 200
+  }
+}
