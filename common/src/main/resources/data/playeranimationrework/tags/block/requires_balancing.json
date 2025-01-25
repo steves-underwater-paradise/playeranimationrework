@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "#playeranimationrework:requires_balancing_full_block_hit_box",
+    "#playeranimationrework:requires_balancing_non_full_block_hit_box"
+  ]
+}

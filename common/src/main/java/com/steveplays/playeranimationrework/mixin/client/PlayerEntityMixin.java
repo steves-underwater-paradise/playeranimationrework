@@ -21,7 +21,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -353,7 +352,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@Unique
 	private boolean playeranimationrework$isOnFence() {
-		return this.getWorld().getBlockState(this.getBlockPos().down()).isIn(BlockTags.FENCES);
+		return this.getWorld().getBlockState(this.getBlockPos()).isIn(PARTags.REQUIRES_BALANCING_FULL_BLOCK_HIT_BOX)
+				|| this.getWorld().getBlockState(this.getBlockPos().down()).isIn(PARTags.REQUIRES_BALANCING);
 	}
 
 	@Unique
