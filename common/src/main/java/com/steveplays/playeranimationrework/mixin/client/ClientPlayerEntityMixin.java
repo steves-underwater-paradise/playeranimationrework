@@ -36,14 +36,13 @@ public class ClientPlayerEntityMixin {
 		playeranimationrework$ticksSinceLastHandSwing++;
 	}
 
-	@Inject(method = "swingHand(Lnet/minecraft/util/Hand;Z)V", at = @At(value = "TAIL"))
+	@Inject(method = "swingHand", at = @At(value = "TAIL"))
 	private void playeranimationrework$invokePunchEvent(CallbackInfo ci) {
 		if (playeranimationrework$ticksSinceLastHandSwing < playeranimationrework$TICKS_BETWEEN_HAND_SWINGS) {
 			return;
 		}
 
 		PARPlayerEvents.PUNCH.invoker().onExecute((ClientPlayerEntity) (Object) this);
-
 	}
 
 	@Inject(method = "onGameModeChanged",
