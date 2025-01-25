@@ -36,6 +36,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
+	@Unique private boolean playeranimationrework$isSwimming = false;
 	@Unique private boolean playeranimationrework$isFenceIdle = false;
 	@Unique private boolean playeranimationrework$isFenceWalking = false;
 	@Unique private boolean playeranimationrework$isFenceRunning = false;
@@ -60,6 +61,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		PARPlayerEvents.WALK_STOP.register(clientPlayer -> playeranimationrework$isWalking = false);
 		PARPlayerEvents.RUN_START.register(clientPlayer -> playeranimationrework$isRunning = true);
 		PARPlayerEvents.RUN_STOP.register(clientPlayer -> playeranimationrework$isRunning = false);
+		PARPlayerEvents.SWIM_START.register(clientPlayer -> playeranimationrework$isSwimming = true);
+		PARPlayerEvents.SWIM_STOP.register(clientPlayer -> playeranimationrework$isSwimming = false);
 		// Register fence movement event handlers
 		PARPlayerEvents.FENCE_IDLE_START.register(clientPlayer -> playeranimationrework$isFenceIdle = true);
 		PARPlayerEvents.FENCE_IDLE_STOP.register(clientPlayer -> playeranimationrework$isFenceIdle = false);
@@ -116,6 +119,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
 			}
 
+			if (playeranimationrework$isSwimming) {
+				PARPlayerEvents.SWIM_STOP.invoker().onExecute(clientPlayer);
+			}
+
 			if (playeranimationrework$isFenceWalking) {
 				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
 			}
@@ -139,7 +146,28 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			return;
 		}
 
-		if (this.isSprinting()) {
+		if (this.isSwimming()) {
+			// Handle the player starting swimming
+			if (!playeranimationrework$isSwimming) {
+				PARPlayerEvents.SWIM_START.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isRunning) {
+				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isWalking) {
+				PARPlayerEvents.WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceWalking) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceRunning) {
+				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+		} else if (this.isSprinting()) {
 			// Handle the player starting sprinting
 			if (!playeranimationrework$isRunning) {
 				PARPlayerEvents.RUN_START.invoker().onExecute(clientPlayer);

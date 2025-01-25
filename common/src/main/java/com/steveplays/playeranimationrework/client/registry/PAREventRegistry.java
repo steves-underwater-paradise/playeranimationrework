@@ -26,6 +26,8 @@ public class PAREventRegistry {
 			put(Identifier.of(MOD_ID, "walk_stop"), PARPlayerEvents.WALK_STOP);
 			put(Identifier.of(MOD_ID, "run_start"), PARPlayerEvents.RUN_START);
 			put(Identifier.of(MOD_ID, "run_stop"), PARPlayerEvents.RUN_STOP);
+			put(Identifier.of(MOD_ID, "swim_start"), PARPlayerEvents.SWIM_START);
+			put(Identifier.of(MOD_ID, "swim_stop"), PARPlayerEvents.SWIM_STOP);
 			put(Identifier.of(MOD_ID, "fence_idle_start"), PARPlayerEvents.FENCE_IDLE_START);
 			put(Identifier.of(MOD_ID, "fence_idle_stop"), PARPlayerEvents.FENCE_IDLE_STOP);
 			put(Identifier.of(MOD_ID, "fence_walk_start"), PARPlayerEvents.FENCE_WALK_START);
