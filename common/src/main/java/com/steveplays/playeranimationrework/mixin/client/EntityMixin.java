@@ -5,7 +5,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import com.steveplays.playeranimationrework.client.event.PARPlayerEvents;
+import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil;
+import com.steveplays.playeranimationrework.client.util.PlayerAnimationUtil.BodyParts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -34,5 +37,17 @@ public class EntityMixin {
 		} else {
 			PARPlayerEvents.LAND_LONG_DISTANCE.invoker().onExecute(clientPlayer);
 		}
+	}
+
+	@Inject(method = "startRiding(Lnet/minecraft/entity/Entity;Z)Z", at = @At(value = "HEAD"))
+	private void playeranimationrework$disableLegAnimationsWhenStartingToRide(Entity entity, boolean force, CallbackInfoReturnable<Boolean> cir) {
+		if (!(((Entity) (Object) this) instanceof AbstractClientPlayerEntity clientPlayer)) {
+			return;
+		}
+
+		PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.RIGHT_ARM, false);
+		PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.LEFT_ARM, false);
+		PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.RIGHT_LEG, false);
+		PlayerAnimationUtil.toggleBodyPartAnimations(clientPlayer, BodyParts.LEFT_LEG, false);
 	}
 }

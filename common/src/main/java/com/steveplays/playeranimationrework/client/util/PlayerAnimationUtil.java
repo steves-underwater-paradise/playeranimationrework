@@ -67,5 +67,7 @@ public class PlayerAnimationUtil {
 	public static class BodyParts {
 		public static final @NotNull String RIGHT_ARM = "rightArm";
 		public static final @NotNull String LEFT_ARM = "leftArm";
+		public static final @NotNull String RIGHT_LEG = "rightLeg";
+		public static final @NotNull String LEFT_LEG = "leftLeg";
 	}
 }
