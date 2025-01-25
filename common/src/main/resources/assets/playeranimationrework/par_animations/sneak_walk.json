@@ -1,0 +1,16 @@
+{
+  "identifier": "playeranimationrework:sneak_walk",
+  "trigger": {
+    "type": "while",
+    "identifier": "playeranimationrework:sneak_walk",
+    "loop": true
+  },
+  "interpolation": {
+    "type": "INOUTSINE",
+    "length_in": 0.1,
+    "length_out": 0.25
+  },
+  "priority": {
+    "layer": 600
+  }
+}

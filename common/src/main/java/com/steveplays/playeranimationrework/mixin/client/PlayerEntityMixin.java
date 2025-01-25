@@ -36,6 +36,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 	@Unique private boolean playeranimationrework$isIdle = false;
 	@Unique private boolean playeranimationrework$isWalking = false;
 	@Unique private boolean playeranimationrework$isRunning = false;
+	@Unique private boolean playeranimationrework$isSneakIdle = false;
+	@Unique private boolean playeranimationrework$isSneakWalking = false;
 	@Unique private boolean playeranimationrework$isSwimmingIdle = false;
 	@Unique private boolean playeranimationrework$isSwimmingSlow = false;
 	@Unique private boolean playeranimationrework$isSwimmingFast = false;
@@ -63,6 +65,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		PARPlayerEvents.WALK_STOP.register(clientPlayer -> playeranimationrework$isWalking = false);
 		PARPlayerEvents.RUN_START.register(clientPlayer -> playeranimationrework$isRunning = true);
 		PARPlayerEvents.RUN_STOP.register(clientPlayer -> playeranimationrework$isRunning = false);
+		PARPlayerEvents.SNEAK_IDLE_START.register(clientPlayer -> playeranimationrework$isSneakIdle = true);
+		PARPlayerEvents.SNEAK_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSneakIdle = false);
+		PARPlayerEvents.SNEAK_WALK_START.register(clientPlayer -> playeranimationrework$isSneakWalking = true);
+		PARPlayerEvents.SNEAK_WALK_STOP.register(clientPlayer -> playeranimationrework$isSneakWalking = false);
 		PARPlayerEvents.SWIM_IDLE_START.register(clientPlayer -> playeranimationrework$isSwimmingIdle = true);
 		PARPlayerEvents.SWIM_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSwimmingIdle = false);
 		PARPlayerEvents.SWIM_SLOW_START.register(clientPlayer -> playeranimationrework$isSwimmingSlow = true);
@@ -114,6 +120,15 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (!playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_START.invoker().onExecute(clientPlayer);
 			}
+			if (this.isSneaking()) {
+				if (!playeranimationrework$isSneakIdle) {
+					PARPlayerEvents.SNEAK_IDLE_START.invoker().onExecute(clientPlayer);
+				}
+			} else {
+				if (playeranimationrework$isSneakIdle) {
+					PARPlayerEvents.SNEAK_IDLE_STOP.invoker().onExecute(clientPlayer);
+				}
+			}
 			if (!playeranimationrework$isSwimmingIdle && playeranimationrework$isInFluid()) {
 				PARPlayerEvents.SWIM_IDLE_START.invoker().onExecute(clientPlayer);
 			}
@@ -126,6 +141,9 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			}
 			if (playeranimationrework$isRunning) {
 				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+			if (playeranimationrework$isSneakWalking) {
+				PARPlayerEvents.SNEAK_WALK_STOP.invoker().onExecute(clientPlayer);
 			}
 
 			if (playeranimationrework$isSwimmingSlow) {
@@ -146,11 +164,22 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (playeranimationrework$isIdle) {
 				PARPlayerEvents.IDLE_STOP.invoker().onExecute(clientPlayer);
 			}
+			if (playeranimationrework$isSneakIdle) {
+				PARPlayerEvents.SNEAK_IDLE_STOP.invoker().onExecute(clientPlayer);
+			}
 			if (playeranimationrework$isSwimmingIdle) {
 				PARPlayerEvents.SWIM_IDLE_STOP.invoker().onExecute(clientPlayer);
 			}
 			if (playeranimationrework$isFenceIdle) {
 				PARPlayerEvents.FENCE_IDLE_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			// Check if the player stopped sneaking
+			if (!this.isSneaking()) {
+				// Handle the player stopping sneaking
+				if (playeranimationrework$isSneakWalking) {
+					PARPlayerEvents.SNEAK_WALK_STOP.invoker().onExecute(clientPlayer);
+				}
 			}
 		}
 	}
@@ -162,7 +191,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		// Check if velocity is more than zero
-		if (MathHelper.approximatelyEquals(this.getVelocity().length(), 0d)) {
+		if (!MathHelper.approximatelyEquals(this.getVelocity().length(), 0d)) {
 			// Handle velocity being more than zero
 			// Check if the player went out of a fluid
 			if (!playeranimationrework$isInFluid()) {
@@ -207,6 +236,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.WALK_STOP.invoker().onExecute(clientPlayer);
 			}
 
+			if (playeranimationrework$isSneakWalking) {
+				PARPlayerEvents.SNEAK_WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
 			if (playeranimationrework$isFenceWalking) {
 				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
 			}
@@ -228,6 +261,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 				PARPlayerEvents.WALK_STOP.invoker().onExecute(clientPlayer);
 			}
 
+			if (playeranimationrework$isSneakWalking) {
+				PARPlayerEvents.SNEAK_WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
 			if (playeranimationrework$isFenceWalking) {
 				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
 			}
@@ -235,7 +272,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 			if (playeranimationrework$isFenceRunning) {
 				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
 			}
-		} else if (this.isSprinting()) {
+		} else if (this.isSprinting() && !this.isSneaking()) {
 			// Handle the player starting sprinting
 			if (!playeranimationrework$isRunning) {
 				PARPlayerEvents.RUN_START.invoker().onExecute(clientPlayer);
@@ -243,6 +280,27 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 			if (!playeranimationrework$isFenceRunning && playeranimationrework$isOnFence()) {
 				PARPlayerEvents.FENCE_RUN_START.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isWalking) {
+				PARPlayerEvents.WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceWalking) {
+				PARPlayerEvents.FENCE_WALK_STOP.invoker().onExecute(clientPlayer);
+			}
+		} else if (this.isSneaking()) {
+			// Handle the player starting sneak walking
+			if (!playeranimationrework$isSneakWalking) {
+				PARPlayerEvents.SNEAK_WALK_START.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isRunning) {
+				PARPlayerEvents.RUN_STOP.invoker().onExecute(clientPlayer);
+			}
+
+			if (playeranimationrework$isFenceRunning) {
+				PARPlayerEvents.FENCE_RUN_STOP.invoker().onExecute(clientPlayer);
 			}
 
 			if (playeranimationrework$isWalking) {

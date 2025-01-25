@@ -25,6 +25,10 @@ public interface PARPlayerEvents {
 	Event<ClientPlayerEvent> WALK_STOP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> RUN_START = EventFactory.createLoop();
 	Event<ClientPlayerEvent> RUN_STOP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SNEAK_IDLE_START = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SNEAK_IDLE_STOP = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SNEAK_WALK_START = EventFactory.createLoop();
+	Event<ClientPlayerEvent> SNEAK_WALK_STOP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> SWIM_IDLE_START = EventFactory.createLoop();
 	Event<ClientPlayerEvent> SWIM_IDLE_STOP = EventFactory.createLoop();
 	Event<ClientPlayerEvent> SWIM_SLOW_START = EventFactory.createLoop();

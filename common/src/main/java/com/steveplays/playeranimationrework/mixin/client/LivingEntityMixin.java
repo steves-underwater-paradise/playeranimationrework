@@ -16,6 +16,7 @@ public class LivingEntityMixin {
 	private void playeranimationrework$preventLimbMovementAnimations(LivingEntity instance, boolean flutter, Operation<Boolean> original) {
 		if (!(((LivingEntity) (Object) this) instanceof AbstractClientPlayerEntity)) {
 			original.call(instance, flutter);
+			return;
 		}
 
 		original.call(instance, false);
