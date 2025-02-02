@@ -28,7 +28,13 @@ public class ClientPlayerEntityMixin {
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
 	private void playeranimationrework$registerEventHandlers(MinecraftClient client, ClientWorld world, ClientPlayNetworkHandler networkHandler, StatHandler stats, ClientRecipeBook recipeBook,
 			boolean lastSneaking, boolean lastSprinting, CallbackInfo ci) {
-		PARPlayerEvents.PUNCH.register(clientPlayer -> playeranimationrework$ticksSinceLastHandSwing = 0);
+		PARPlayerEvents.PUNCH.register(clientPlayer -> {
+			if (clientPlayer != (ClientPlayerEntity) (Object) this) {
+				return;
+			}
+
+			playeranimationrework$ticksSinceLastHandSwing = 0;
+		});
 	}
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))

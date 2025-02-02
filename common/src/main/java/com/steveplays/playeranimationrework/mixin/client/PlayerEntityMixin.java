@@ -55,7 +55,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
 	private void playeranimationrework$registerEventHandlers(World world, BlockPos pos, float yaw, GameProfile gameProfile, CallbackInfo ci) {
-		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity)) {
+		if (!(((PlayerEntity) (Object) this) instanceof AbstractClientPlayerEntity thisClientPlayer)) {
 			return;
 		}
 
@@ -63,36 +63,204 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
 		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
 		// Register item use event handlers
-		PARPlayerEvents.EAT_START.register(clientPlayer -> playeranimationrework$isEating = true);
-		PARPlayerEvents.EAT_STOP.register(clientPlayer -> playeranimationrework$isEating = false);
-		PARPlayerEvents.DRINK_RIGHT_ARM_START.register(clientPlayer -> playeranimationrework$isDrinkingRightArm = true);
-		PARPlayerEvents.DRINK_RIGHT_ARM_STOP.register(clientPlayer -> playeranimationrework$isDrinkingRightArm = false);
-		PARPlayerEvents.DRINK_LEFT_ARM_START.register(clientPlayer -> playeranimationrework$isDrinkingLeftArm = true);
-		PARPlayerEvents.DRINK_LEFT_ARM_STOP.register(clientPlayer -> playeranimationrework$isDrinkingLeftArm = false);
+		PARPlayerEvents.EAT_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isEating = true;
+		});
+		PARPlayerEvents.EAT_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isEating = false;
+		});
+		PARPlayerEvents.DRINK_RIGHT_ARM_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isDrinkingRightArm = true;
+		});
+		PARPlayerEvents.DRINK_RIGHT_ARM_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isDrinkingRightArm = false;
+		});
+		PARPlayerEvents.DRINK_LEFT_ARM_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isDrinkingLeftArm = true;
+		});
+		PARPlayerEvents.DRINK_LEFT_ARM_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isDrinkingLeftArm = false;
+		});
 		// Register movement event handlers
-		PARPlayerEvents.IDLE_START.register(clientPlayer -> playeranimationrework$isIdle = true);
-		PARPlayerEvents.IDLE_STOP.register(clientPlayer -> playeranimationrework$isIdle = false);
-		PARPlayerEvents.WALK_START.register(clientPlayer -> playeranimationrework$isWalking = true);
-		PARPlayerEvents.WALK_STOP.register(clientPlayer -> playeranimationrework$isWalking = false);
-		PARPlayerEvents.RUN_START.register(clientPlayer -> playeranimationrework$isRunning = true);
-		PARPlayerEvents.RUN_STOP.register(clientPlayer -> playeranimationrework$isRunning = false);
-		PARPlayerEvents.SNEAK_IDLE_START.register(clientPlayer -> playeranimationrework$isSneakIdle = true);
-		PARPlayerEvents.SNEAK_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSneakIdle = false);
-		PARPlayerEvents.SNEAK_WALK_START.register(clientPlayer -> playeranimationrework$isSneakWalking = true);
-		PARPlayerEvents.SNEAK_WALK_STOP.register(clientPlayer -> playeranimationrework$isSneakWalking = false);
-		PARPlayerEvents.SWIM_IDLE_START.register(clientPlayer -> playeranimationrework$isSwimmingIdle = true);
-		PARPlayerEvents.SWIM_IDLE_STOP.register(clientPlayer -> playeranimationrework$isSwimmingIdle = false);
-		PARPlayerEvents.SWIM_SLOW_START.register(clientPlayer -> playeranimationrework$isSwimmingSlow = true);
-		PARPlayerEvents.SWIM_SLOW_STOP.register(clientPlayer -> playeranimationrework$isSwimmingSlow = false);
-		PARPlayerEvents.SWIM_FAST_START.register(clientPlayer -> playeranimationrework$isSwimmingFast = true);
-		PARPlayerEvents.SWIM_FAST_STOP.register(clientPlayer -> playeranimationrework$isSwimmingFast = false);
+		PARPlayerEvents.IDLE_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isIdle = true;
+		});
+		PARPlayerEvents.IDLE_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isIdle = false;
+		});
+		PARPlayerEvents.WALK_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isWalking = true;
+		});
+		PARPlayerEvents.WALK_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isWalking = false;
+		});
+		PARPlayerEvents.RUN_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isRunning = true;
+		});
+		PARPlayerEvents.RUN_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isRunning = false;
+		});
+		PARPlayerEvents.SNEAK_IDLE_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSneakIdle = true;
+		});
+		PARPlayerEvents.SNEAK_IDLE_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSneakIdle = false;
+		});
+		PARPlayerEvents.SNEAK_WALK_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSneakWalking = true;
+		});
+		PARPlayerEvents.SNEAK_WALK_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSneakWalking = false;
+		});
+		PARPlayerEvents.SWIM_IDLE_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingIdle = true;
+		});
+		PARPlayerEvents.SWIM_IDLE_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingIdle = false;
+		});
+		PARPlayerEvents.SWIM_SLOW_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingSlow = true;
+		});
+		PARPlayerEvents.SWIM_SLOW_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingSlow = false;
+		});
+		PARPlayerEvents.SWIM_FAST_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingFast = true;
+		});
+		PARPlayerEvents.SWIM_FAST_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isSwimmingFast = false;
+		});
 		// Register fence movement event handlers
-		PARPlayerEvents.FENCE_IDLE_START.register(clientPlayer -> playeranimationrework$isFenceIdle = true);
-		PARPlayerEvents.FENCE_IDLE_STOP.register(clientPlayer -> playeranimationrework$isFenceIdle = false);
-		PARPlayerEvents.FENCE_WALK_START.register(clientPlayer -> playeranimationrework$isFenceWalking = true);
-		PARPlayerEvents.FENCE_WALK_STOP.register(clientPlayer -> playeranimationrework$isFenceWalking = false);
-		PARPlayerEvents.FENCE_RUN_START.register(clientPlayer -> playeranimationrework$isFenceRunning = true);
-		PARPlayerEvents.FENCE_RUN_STOP.register(clientPlayer -> playeranimationrework$isFenceRunning = false);
+		PARPlayerEvents.FENCE_IDLE_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceIdle = true;
+		});
+		PARPlayerEvents.FENCE_IDLE_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceIdle = false;
+		});
+		PARPlayerEvents.FENCE_WALK_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceWalking = true;
+		});
+		PARPlayerEvents.FENCE_WALK_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceWalking = false;
+		});
+		PARPlayerEvents.FENCE_RUN_START.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceRunning = true;
+		});
+		PARPlayerEvents.FENCE_RUN_STOP.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$isFenceRunning = false;
+		});
 	}
 
 	@Inject(method = "jump", at = @At(value = "TAIL"))
