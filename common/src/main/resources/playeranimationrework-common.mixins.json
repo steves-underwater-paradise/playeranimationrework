@@ -8,9 +8,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "client.AbstractClientPlayerEntityMixin",
     "client.ClientPlayerEntityMixin",
-    "client.LivingEntityRendererMixin",
     "client.LivingEntityMixin",
     "client.PlayerEntityMixin",
     "client.EntityMixin",
