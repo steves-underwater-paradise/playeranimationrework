@@ -33,6 +33,9 @@
   "entrypoints": {
     "main": [
       "com.steveplays.playeranimationrework.fabric.PlayerAnimationReworkFabric"
+    ],
+    "client": [
+      "com.steveplays.playeranimationrework.fabric.PlayerAnimationReworkClientFabric"
     ]
   },
   "mixins": [

@@ -60,8 +60,20 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 		}
 
 		// Register switch to item event handlers
-		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
-		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(this::playeranimationrework$onSwitchItem);
+		PARPlayerEvents.SWITCH_TO_ITEM_ON_BACK_RIGHT_ARM.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$onSwitchItem(thisClientPlayer);
+		});
+		PARPlayerEvents.SWITCH_TO_ITEM_IN_POCKET_RIGHT_ARM.register(clientPlayer -> {
+			if (clientPlayer != thisClientPlayer) {
+				return;
+			}
+
+			playeranimationrework$onSwitchItem(thisClientPlayer);
+		});
 		// Register item use event handlers
 		PARPlayerEvents.EAT_START.register(clientPlayer -> {
 			if (clientPlayer != thisClientPlayer) {
