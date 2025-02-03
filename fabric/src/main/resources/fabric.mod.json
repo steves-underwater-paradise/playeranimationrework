@@ -35,7 +35,7 @@
       "com.steveplays.playeranimationrework.fabric.PlayerAnimationReworkFabric"
     ],
     "client": [
-      "com.steveplays.playeranimationrework.fabric.PlayerAnimationReworkClientFabric"
+      "com.steveplays.playeranimationrework.fabric.client.PlayerAnimationReworkClientFabric"
     ]
   },
   "mixins": [
